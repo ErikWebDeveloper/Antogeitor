@@ -99,5 +99,3 @@ expo start
 --- 
 
 ### ¡Contribuciones y sugerencias son siempre bienvenidas!
-
-[def]: #-tecnologías-utilizadas
