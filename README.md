@@ -6,6 +6,7 @@
 - [🍌 Antogeitor - *Registro de Comida y Antojos*](#-antogeitor---registro-de-comida-y-antojos)
   - [Tabla de Contenidos](#tabla-de-contenidos)
     - [📱 Screenshots](#-screenshots)
+    - [📥 Descargar App](#-descargar-app)
     - [💬 App en React Native](#-app-en-react-native)
     - [🤖 Tecnologías utilizadas](#-tecnologías-utilizadas)
     - [🚀 Cómo empezar](#-cómo-empezar)
@@ -18,6 +19,10 @@
 ---
 ### 📱 Screenshots
 [👉 Ver capturas de pantalla de la app aquí](./SCREENSHOTS.md)
+
+### 📥 Descargar App
+Puedes descargar la última versión de la app aquí:
+[Descargar la versión v1.0.0](https://github.com/tu-usuario/tu-repositorio/releases/tag/v1.0.0)
 
 ### 💬 App en React Native
 
