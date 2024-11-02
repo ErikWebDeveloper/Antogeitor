@@ -22,7 +22,7 @@
 
 ### 📥 Descargar App
 Puedes descargar la última versión de la app aquí:
-[Descargar la versión v1.0.0](https://github.com/tu-usuario/tu-repositorio/releases/tag/v1.0.0)
+[Descargar la versión v1.0.0](https://github.com/ErikWebDeveloper/Antogeitor/releases/tag/v1.0.0)
 
 ### 💬 App en React Native
 
