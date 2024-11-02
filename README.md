@@ -5,6 +5,7 @@
 ## Tabla de Contenidos
 - [🍌 Antogeitor - *Registro de Comida y Antojos*](#-antogeitor---registro-de-comida-y-antojos)
   - [Tabla de Contenidos](#tabla-de-contenidos)
+    - [📱 Screenshots](#-screenshots)
     - [💬 App en React Native](#-app-en-react-native)
     - [🤖 Tecnologías utilizadas](#-tecnologías-utilizadas)
     - [🚀 Cómo empezar](#-cómo-empezar)
@@ -13,8 +14,10 @@
     - [Clonar el Repositorio](#clonar-el-repositorio)
     - [Instalación de Dependencias](#instalación-de-dependencias)
     - [Ejecución del Proyecto](#ejecución-del-proyecto)
-    - [¡Contribuciones y sugerencias son siempre bienvenidas!](#contribuciones-y-sugerencias-son-siempre-bienvenidas)
+    - [Contribuciones y sugerencias](#contribuciones-y-sugerencias)
 ---
+### 📱 Screenshots
+[👉 Ver capturas de pantalla de la app aquí](./SCREENSHOTS.md)
 
 ### 💬 App en React Native
 
@@ -96,6 +99,5 @@ expo start
 - Ejecutar la aplicación en un emulador de Android o un simulador de iOS.
 
 
---- 
-
-### ¡Contribuciones y sugerencias son siempre bienvenidas!
+### Contribuciones y sugerencias
+[👉 Lee las normas de contribución aquí](./CONTRIBUTING.md)
