@@ -81,7 +81,7 @@ export default function RegistrosScreen({ route }) {
       const registrosGuardados = await AsyncStorage.getItem(date);
       if (registrosGuardados) {
         setRegistros(JSON.parse(registrosGuardados));
-        console.log(registrosGuardados)
+        console.log(registrosGuardados);
         //setRegistros(mockData);
       }
     } catch (error) {
@@ -229,20 +229,22 @@ export default function RegistrosScreen({ route }) {
               onPress={() => openModal(item)}
             >
               <View style={{ flexDirection: "row", opacity: 0.5, gap: 5 }}>
-                <Text style={{ flex: 1 }}>🕓 {item.hora}</Text>
+                <Text style={{ flex: 1, fontSize: 12 }}>🕓 {item.hora}</Text>
                 {item.antojo ? (
                   <>
-                    <Text>⏳ {item.duracion}</Text>
-                    <Text>⭐️ {item.intensidad}</Text>
+                    <Text style={{fontSize: 12}}>⏳ {item.duracion}</Text>
+                    <Text style={{fontSize: 12}}>⭐️ {item.intensidad}</Text>
                   </>
                 ) : (
-                  <Text style={{ flex: 1, textAlign: "right" }}>
+                  <Text style={{fontSize: 12}}>
                     {item.etiqueta}
                   </Text>
                 )}
               </View>
               <View>
-                <Text>{item.antojo ? `${item.etiqueta}` : `${item.comida}`}</Text>
+                <Text>
+                  {item.antojo ? `${item.etiqueta}` : `${item.comida}`}
+                </Text>
               </View>
             </TouchableOpacity>
           )}
@@ -441,10 +443,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   butonsContainer: {
-    flexDirection: "row",
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 50,
     justifyContent: "center",
-    position: "relative",
-    bottom: 90,
+    alignItems: "center",
   },
   registroItem: {
     flexDirection: "column",
@@ -453,7 +457,7 @@ const styles = StyleSheet.create({
     borderColor: "#666",
     borderRadius: 5,
     marginBottom: 15,
-    elevation: 2,
+    elevation: 1,
     paddingHorizontal: 15,
     paddingVertical: 15,
     gap: 15,
