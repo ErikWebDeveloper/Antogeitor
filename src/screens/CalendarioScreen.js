@@ -4,7 +4,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Calendar } from "react-native-calendars";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 export default function CalendarioScreen({ navigation }) {
   const [markedDates, setMarkedDates] = useState({});
 

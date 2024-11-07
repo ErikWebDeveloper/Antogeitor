@@ -15,6 +15,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import { formatearFecha } from "../utils/date";
+import { mockData } from "../mockData";
 
 const opcionesComida = {
   comidas: [
@@ -80,6 +81,8 @@ export default function RegistrosScreen({ route }) {
       const registrosGuardados = await AsyncStorage.getItem(date);
       if (registrosGuardados) {
         setRegistros(JSON.parse(registrosGuardados));
+        console.log(registrosGuardados)
+        //setRegistros(mockData);
       }
     } catch (error) {
       console.error("Error al cargar los registros:", error);
@@ -225,20 +228,22 @@ export default function RegistrosScreen({ route }) {
               ]}
               onPress={() => openModal(item)}
             >
-              <Text>🕓 {item.hora}</Text>
-              {!item.antojo && (
-                <>
-                  <Text>{item.comida}</Text>
-                </>
-              )}
-              <Text>{item.etiqueta}</Text>
-
-              {item.antojo && (
-                <>
-                  <Text>⏳ {item.duracion}</Text>
-                  <Text>⭐️ {item.intensidad}</Text>
-                </>
-              )}
+              <View style={{ flexDirection: "row", opacity: 0.5, gap: 5 }}>
+                <Text style={{ flex: 1 }}>🕓 {item.hora}</Text>
+                {item.antojo ? (
+                  <>
+                    <Text>⏳ {item.duracion}</Text>
+                    <Text>⭐️ {item.intensidad}</Text>
+                  </>
+                ) : (
+                  <Text style={{ flex: 1, textAlign: "right" }}>
+                    {item.etiqueta}
+                  </Text>
+                )}
+              </View>
+              <View>
+                <Text>{item.antojo ? `${item.etiqueta}` : `${item.comida}`}</Text>
+              </View>
             </TouchableOpacity>
           )}
         />
@@ -438,18 +443,20 @@ const styles = StyleSheet.create({
   butonsContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    gap: 15,
+    position: "relative",
+    bottom: 90,
   },
   registroItem: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
     paddingVertical: 8,
     borderColor: "#666",
-    borderRadius: 10,
+    borderRadius: 5,
     marginBottom: 15,
     elevation: 2,
     paddingHorizontal: 15,
     paddingVertical: 15,
+    gap: 15,
   },
   timeInput: {
     borderWidth: 1,
