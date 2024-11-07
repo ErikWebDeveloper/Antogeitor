@@ -52,6 +52,7 @@ export default function RegistrosScreen({ route }) {
   const [intensidad, setIntensidad] = useState("");
   const [etiqueta, setEtiqueta] = useState("");
   const [comida, setComida] = useState("");
+  const [calorias, setCalorias] = useState("");
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedRegistro, setSelectedRegistro] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -232,13 +233,11 @@ export default function RegistrosScreen({ route }) {
                 <Text style={{ flex: 1, fontSize: 12 }}>🕓 {item.hora}</Text>
                 {item.antojo ? (
                   <>
-                    <Text style={{fontSize: 12}}>⏳ {item.duracion}</Text>
-                    <Text style={{fontSize: 12}}>⭐️ {item.intensidad}</Text>
+                    <Text style={{ fontSize: 12 }}>⏳ {item.duracion}</Text>
+                    <Text style={{ fontSize: 12 }}>⭐️ {item.intensidad}</Text>
                   </>
                 ) : (
-                  <Text style={{fontSize: 12}}>
-                    {item.etiqueta}
-                  </Text>
+                  <Text style={{ fontSize: 12 }}>{item.etiqueta}</Text>
                 )}
               </View>
               <View>
@@ -312,7 +311,9 @@ export default function RegistrosScreen({ route }) {
               {/* Renderizamos el elemento de selección inicial dependiendo del estado antojo */}
               <Picker.Item
                 label={
-                  antojo ? "Seleccione un antojo" : "Seleccione una comida"
+                  antojo
+                    ? "Seleccione un antojo"
+                    : "Seleccione una comida del día"
                 }
                 value=""
               />
@@ -373,9 +374,18 @@ export default function RegistrosScreen({ route }) {
                   style={[styles.input, { marginBottom: 20 }]}
                   onChangeText={(prevVal) => setComida(prevVal)}
                   value={comida}
-                  placeholder="Comida..."
+                  placeholder="🥗 Comida..."
                   placeholderTextColor={"grey"}
                   keyboardType="default"
+                />
+
+                <TextInput
+                  style={[styles.input, { marginBottom: 20 }]}
+                  onChangeText={(prevVal) => setCalorias(prevVal)}
+                  value={calorias}
+                  placeholder="🔥 Calorías..."
+                  placeholderTextColor={"grey"}
+                  keyboardType="numeric"
                 />
               </>
             )}
@@ -455,7 +465,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 8,
     borderColor: "#666",
-    borderRadius: 5,
+    borderRadius: 10,
     marginBottom: 15,
     elevation: 1,
     paddingHorizontal: 15,

@@ -46,12 +46,6 @@ export default function CalendarioScreen({ navigation }) {
         firstDay={1}
         locale={"es"}
       />
-      {/*<Text>
-        "¡Selecciona un día en el calendario y empieza a marcar tus épicos
-        registros de alimentación, antojos secretos y esas veces que dijiste
-        'solo una mordida'! ¡Vamos, tu estómago y tu futuro yo te lo
-        agradecerán!"
-      </Text>*/}
     </View>
   );
 }
