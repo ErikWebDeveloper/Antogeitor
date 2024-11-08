@@ -84,7 +84,6 @@ export default function RegistrosScreen({ route }) {
       const registrosGuardados = await AsyncStorage.getItem(date);
       if (registrosGuardados) {
         setRegistros(JSON.parse(registrosGuardados));
-        console.log(registrosGuardados);
         return JSON.parse(registrosGuardados);
         //setRegistros(mockData);
       }
