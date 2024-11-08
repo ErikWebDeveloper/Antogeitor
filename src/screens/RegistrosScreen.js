@@ -238,10 +238,9 @@ export default function RegistrosScreen({ route }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.dateText}>🗓️ {formatearFecha(date)}</Text>
-
       {/* Header panel */}
-      <View>
+      <View style={{flexDirection: "row"}}>
+        <Text style={[styles.dateText, {flex: 1}]}>🗓️ {formatearFecha(date)}</Text>
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>
           🔥 {totalCalorias} cal.
         </Text>
