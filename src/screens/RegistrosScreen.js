@@ -96,7 +96,10 @@ export default function RegistrosScreen({ route }) {
   const contabilizarTotalCalorias = async () => {
     // Obtener los registros del dia y convertir a JSON
     let registrosGuardados = await AsyncStorage.getItem(date);
-    registrosGuardados = JSON.parse(registrosGuardados)
+    registrosGuardados = JSON.parse(registrosGuardados);
+
+    // Verificar que tenga registros
+    if (!registrosGuardados) return;
 
     // Recorrer los registros y sumar las calorias
     const totalCalorias = registrosGuardados
@@ -113,11 +116,12 @@ export default function RegistrosScreen({ route }) {
     try {
       await AsyncStorage.setItem(date, JSON.stringify(nuevosRegistros));
       await limpiarRegistroVacio();
+      await contabilizarTotalCalorias();
     } catch (error) {
       console.error("Error al guardar los registros:", error);
     }
   };
-  
+
   const agregarRegistro = () => {
     if (hora && etiqueta && duracion && intensidad && comida) {
       const horaMin = hora.toLocaleTimeString([], {
@@ -206,10 +210,11 @@ export default function RegistrosScreen({ route }) {
     setModalVisibleRegistro(true);
   };
 
-  const eliminarRegistro = () => {
+  const eliminarRegistro = async () => {
     const nuevosRegistros = registros.filter((r) => r !== selectedRegistro);
     setRegistros(nuevosRegistros);
     guardarRegistros(nuevosRegistros);
+    await contabilizarTotalCalorias();
     setModalVisible(false);
   };
 
@@ -237,7 +242,9 @@ export default function RegistrosScreen({ route }) {
 
       {/* Header panel */}
       <View>
-        <Text style={{fontSize: 18, fontWeight: "bold"}}>🔥 {totalCalorias} cal.</Text>
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+          🔥 {totalCalorias} cal.
+        </Text>
       </View>
 
       {/* Tabla de registro */}
