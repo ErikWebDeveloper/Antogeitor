@@ -5,7 +5,7 @@
 - [x] Hacer responsive los ítems y la tabla en screen RegistrosScreen
 - [ ] Guardar datos en SQLite
 - [ ] Compatibilidad para IOs
-- [ ] Contador de calorías en cada registro y cada ítem en el registro.
+- [x] Contador de calorías en cada registro y cada ítem en el registro.
 - [ ] Crear screen para almacenar platos e importarlos al input de registros.
 
 

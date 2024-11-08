@@ -53,6 +53,7 @@ export default function RegistrosScreen({ route }) {
   const [etiqueta, setEtiqueta] = useState("");
   const [comida, setComida] = useState("");
   const [calorias, setCalorias] = useState("");
+  const [totalCalorias, setTotalCalorias] = useState("");
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedRegistro, setSelectedRegistro] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -61,6 +62,7 @@ export default function RegistrosScreen({ route }) {
   useEffect(() => {
     limpiarRegistroVacio();
     cargarRegistros();
+    contabilizarTotalCalorias();
     handleSwitchAntojo(antojo);
   }, []);
 
@@ -83,11 +85,28 @@ export default function RegistrosScreen({ route }) {
       if (registrosGuardados) {
         setRegistros(JSON.parse(registrosGuardados));
         console.log(registrosGuardados);
+        return JSON.parse(registrosGuardados);
         //setRegistros(mockData);
       }
     } catch (error) {
       console.error("Error al cargar los registros:", error);
     }
+  };
+
+  const contabilizarTotalCalorias = async () => {
+    // Obtener los registros del dia y convertir a JSON
+    let registrosGuardados = await AsyncStorage.getItem(date);
+    registrosGuardados = JSON.parse(registrosGuardados)
+
+    // Recorrer los registros y sumar las calorias
+    const totalCalorias = registrosGuardados
+      .map((registro) => {
+        const calorias = parseInt(registro.calorias, 10); // Intenta convertir a número
+        return isNaN(calorias) ? 0 : calorias; // Si no es un número, devuelve 0
+      })
+      .reduce((total, calorias) => total + calorias, 0); // Suma todas las calorías
+
+    setTotalCalorias(totalCalorias);
   };
 
   const guardarRegistros = async (nuevosRegistros) => {
@@ -98,7 +117,7 @@ export default function RegistrosScreen({ route }) {
       console.error("Error al guardar los registros:", error);
     }
   };
-
+  
   const agregarRegistro = () => {
     if (hora && etiqueta && duracion && intensidad && comida) {
       const horaMin = hora.toLocaleTimeString([], {
@@ -119,6 +138,7 @@ export default function RegistrosScreen({ route }) {
           duracion,
           intensidad,
           comida,
+          calorias,
         };
       } else {
         nuevosRegistros.push({
@@ -128,6 +148,7 @@ export default function RegistrosScreen({ route }) {
           duracion,
           intensidad,
           comida,
+          calorias,
         });
       }
 
@@ -155,11 +176,7 @@ export default function RegistrosScreen({ route }) {
   const resetFormulario = () => {
     setAntojo(false);
     setHora(null);
-    //Este estado lo pasa a manejar handleSwitchAntojo()
-    //setEtiqueta("");
-    //setDuracion("");
-    //setIntensidad("");
-    //setComida("");
+    setCalorias("");
     handleSwitchAntojo(false);
     setSelectedRegistro(null);
     setModalVisibleRegistro(false);
@@ -180,6 +197,7 @@ export default function RegistrosScreen({ route }) {
     setDuracion(registro.duracion);
     setIntensidad(registro.intensidad);
     setComida(registro.comida);
+    setCalorias(registro.calorias);
     setModalVisible(true);
   };
 
@@ -209,12 +227,18 @@ export default function RegistrosScreen({ route }) {
       setIntensidad("");
       setDuracion("");
       setComida("0");
+      setCalorias("");
     }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.dateText}>🗓️ {formatearFecha(date)}</Text>
+
+      {/* Header panel */}
+      <View>
+        <Text style={{fontSize: 18, fontWeight: "bold"}}>🔥 {totalCalorias} cal.</Text>
+      </View>
 
       {/* Tabla de registro */}
       <View style={styles.tableContainer}>
@@ -229,6 +253,7 @@ export default function RegistrosScreen({ route }) {
               ]}
               onPress={() => openModal(item)}
             >
+              {/* Header */}
               <View style={{ flexDirection: "row", opacity: 0.5, gap: 5 }}>
                 <Text style={{ flex: 1, fontSize: 12 }}>🕓 {item.hora}</Text>
                 {item.antojo ? (
@@ -240,9 +265,29 @@ export default function RegistrosScreen({ route }) {
                   <Text style={{ fontSize: 12 }}>{item.etiqueta}</Text>
                 )}
               </View>
+
+              {/* Body */}
               <View>
                 <Text>
                   {item.antojo ? `${item.etiqueta}` : `${item.comida}`}
+                </Text>
+              </View>
+
+              {/* Footer */}
+              <View
+                style={{
+                  flexDirection: "row",
+                  opacity: 0.5,
+                }}
+              >
+                <Text style={{ fontSize: 12 }}>
+                  {!item.antojo
+                    ? `🔥 ${
+                        item.calorias === undefined
+                          ? "-"
+                          : `${item.calorias} cal.`
+                      }`
+                    : `⭐️ ${item.intensidad}`}
                 </Text>
               </View>
             </TouchableOpacity>
