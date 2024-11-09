@@ -33,7 +33,10 @@ export default function App() {
           <Stack.Screen name="Registros" component={RegistrosScreen} />
         </Stack.Navigator>
       </NavigationContainer>
-      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+      <StatusBar
+        style={colorScheme === "dark" ? "light" : "dark"} 
+        backgroundColor={colorScheme === "dark" ? "#000000" : "#FFFFFF"}
+      />
     </ThemeProvider>
   );
 }
