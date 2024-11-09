@@ -1,11 +1,59 @@
-import React, { useState, useCallback } from "react";
-import { View, Text } from "react-native";
+import React, { useState, useCallback, useEffect } from "react";
+import { View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { Calendar } from "react-native-calendars";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "../contexts/ThemeContext";
+import * as Lang from "../lang/CalendarLang"
+/*// Configura el idioma en español
+LocaleConfig.locales["es"] = {
+  monthNames: [
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
+  ],
+  monthNamesShort: [
+    "Ene",
+    "Feb",
+    "Mar",
+    "Abr",
+    "May",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dic",
+  ],
+  dayNames: [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+  ],
+  dayNamesShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+  today: "Hoy",
+};
+
+// Establece el idioma predeterminado
+LocaleConfig.defaultLocale = "es";*/
 
 export default function CalendarioScreen({ navigation }) {
   const [markedDates, setMarkedDates] = useState({});
+  const { theme, themeCalendar } = useTheme();
 
   const handleDayPress = (day) => {
     navigation.navigate("Registros", { date: day.dateString });
@@ -19,7 +67,7 @@ export default function CalendarioScreen({ navigation }) {
 
       // Convertir las claves en el formato adecuado para markedDates
       const datesWithRecords = allKeys.reduce((acc, date) => {
-        acc[date] = { marked: true, dotColor: "blue" };
+        acc[date] = { marked: true};
         return acc;
       }, {});
 
@@ -35,14 +83,15 @@ export default function CalendarioScreen({ navigation }) {
     }, [])
   );
 
+
   return (
     <View
       style={{ flex: 1 /*justifyContent: "center", alignItems: "center"*/ }}
     >
       <Calendar
+        theme={themeCalendar}
         onDayPress={handleDayPress}
         markedDates={markedDates}
-        style={{ width: "100%" }}
         firstDay={1}
         locale={"es"}
       />

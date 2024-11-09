@@ -1,6 +1,6 @@
 ## Features para la versión inicial
 
-- [ ] Añadir soporte para tema oscuro
+- [x] Añadir soporte para tema oscuro
 - [ ] Añadir etiqueta de colores a los ítems
 - [x] Hacer responsive los ítems y la tabla en screen RegistrosScreen
 - [ ] Guardar datos en SQLite

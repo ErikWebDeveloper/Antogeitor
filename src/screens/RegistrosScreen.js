@@ -15,7 +15,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import { formatearFecha } from "../utils/date";
-import { mockData } from "../mockData";
+import { useTheme } from "../contexts/ThemeContext";
 
 const opcionesComida = {
   comidas: [
@@ -43,6 +43,7 @@ const opcionesComida = {
 };
 
 export default function RegistrosScreen({ route }) {
+  const { theme } = useTheme();
   const { date } = route.params;
   const [registros, setRegistros] = useState([]);
 
@@ -236,11 +237,15 @@ export default function RegistrosScreen({ route }) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       {/* Header panel */}
-      <View style={{flexDirection: "row"}}>
-        <Text style={[styles.dateText, {flex: 1}]}>🗓️ {formatearFecha(date)}</Text>
-        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+      <View style={{ flexDirection: "row" }}>
+        <Text style={[styles.dateText, { flex: 1, color: theme.colors.text }]}>
+          🗓️ {formatearFecha(date)}
+        </Text>
+        <Text
+          style={{ fontSize: 18, fontWeight: "bold", color: theme.colors.text }}
+        >
           🔥 {totalCalorias} cal.
         </Text>
       </View>
@@ -260,14 +265,42 @@ export default function RegistrosScreen({ route }) {
             >
               {/* Header */}
               <View style={{ flexDirection: "row", opacity: 0.5, gap: 5 }}>
-                <Text style={{ flex: 1, fontSize: 12 }}>🕓 {item.hora}</Text>
+                <Text
+                  style={{
+                    flex: 1,
+                    fontSize: 12,
+                    fontFamily: "monospace",
+                    color: "grey",
+                  }}
+                >
+                  🕓 {item.hora}
+                </Text>
                 {item.antojo ? (
                   <>
-                    <Text style={{ fontSize: 12 }}>⏳ {item.duracion}</Text>
-                    <Text style={{ fontSize: 12 }}>⭐️ {item.intensidad}</Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        backgroundColor: "red",
+                        paddingHorizontal: 5,
+                        borderRadius: 50,
+                        color: "white",
+                      }}
+                    >
+                      ⭐️ {item.intensidad}
+                    </Text>
                   </>
                 ) : (
-                  <Text style={{ fontSize: 12 }}>{item.etiqueta}</Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      backgroundColor: "#5078ce",
+                      paddingHorizontal: 5,
+                      borderRadius: 50,
+                      color: "white",
+                    }}
+                  >
+                    {item.etiqueta}
+                  </Text>
                 )}
               </View>
 
@@ -285,14 +318,14 @@ export default function RegistrosScreen({ route }) {
                   opacity: 0.5,
                 }}
               >
-                <Text style={{ fontSize: 12 }}>
+                <Text style={{ fontSize: 12, color: "grey" }}>
                   {!item.antojo
                     ? `🔥 ${
                         item.calorias === undefined
                           ? "-"
                           : `${item.calorias} cal.`
                       }`
-                    : `⭐️ ${item.intensidad}`}
+                    : `⏳ ${item.duracion}`}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -513,14 +546,13 @@ const styles = StyleSheet.create({
   registroItem: {
     flexDirection: "column",
     justifyContent: "space-between",
-    paddingVertical: 8,
     borderColor: "#666",
     borderRadius: 10,
     marginBottom: 15,
     elevation: 1,
     paddingHorizontal: 15,
-    paddingVertical: 15,
-    gap: 15,
+    paddingVertical: 10,
+    gap: 5,
   },
   timeInput: {
     borderWidth: 1,
