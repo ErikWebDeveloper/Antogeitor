@@ -20,7 +20,6 @@ export const ThemeProvider = ({ children }) => {
 
   // Actualiza el tema automáticamente si cambia el esquema de color del sistema
   useEffect(() => {
-    console.log("Updating color schema")
     const newTheme = colorScheme === "dark" ? darkTheme : lightTheme;
     const newThemeCalendar =
       colorScheme === "dark" ? darkThemeCalendar : lightThemeCalendar;
