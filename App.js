@@ -3,6 +3,7 @@ import { useColorScheme } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { StatusBar } from "expo-status-bar";
 
 import CalendarioScreen from "./src/screens/CalendarioScreen";
 import RegistrosScreen from "./src/screens/RegistrosScreen";
@@ -32,6 +33,7 @@ export default function App() {
           <Stack.Screen name="Registros" component={RegistrosScreen} />
         </Stack.Navigator>
       </NavigationContainer>
+      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
     </ThemeProvider>
   );
 }
