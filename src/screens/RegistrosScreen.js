@@ -86,7 +86,6 @@ export default function RegistrosScreen({ route }) {
       if (registrosGuardados) {
         setRegistros(JSON.parse(registrosGuardados));
         return JSON.parse(registrosGuardados);
-        //setRegistros(mockData);
       }
     } catch (error) {
       console.error("Error al cargar los registros:", error);

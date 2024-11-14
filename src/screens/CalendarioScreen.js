@@ -14,6 +14,20 @@ export default function CalendarioScreen({ navigation }) {
     navigation.navigate("Registros", { date: day.dateString });
   };
 
+  const logAllAsyncStorage = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys(); // Obtener todas las claves
+      const items = await AsyncStorage.multiGet(keys); // Obtener los valores de esas claves
+
+      console.log("AsyncStorage completo:");
+      items.forEach(([key, value]) => {
+        console.log(`${key}: ${value}`);
+      });
+    } catch (error) {
+      console.error("Error al acceder a AsyncStorage:", error);
+    }
+  };
+
   const obtenerTodoAsyncStorage = async () => {
     try {
       //await AsyncStorage.clear();
@@ -35,6 +49,7 @@ export default function CalendarioScreen({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       obtenerTodoAsyncStorage();
+      logAllAsyncStorage();
     }, [])
   );
 
@@ -65,7 +80,7 @@ export default function CalendarioScreen({ navigation }) {
               padding: 10,
               marginVertical: 50,
               width: "80%",
-              marginHorizontal: "auto"
+              marginHorizontal: "auto",
             }}
           >
             Añadir productos

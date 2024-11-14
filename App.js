@@ -9,7 +9,7 @@ import CalendarioScreen from "./src/screens/CalendarioScreen";
 import RegistrosScreen from "./src/screens/RegistrosScreen";
 import ProductosScreen from "./src/screens/ProductosScreen";
 
-import { SQLiteProvider } from "expo-sqlite";
+//import { SQLiteProvider } from "expo-sqlite";
 
 import { lightTheme, darkTheme } from "./src/themes/themes";
 import { ThemeProvider } from "./src/contexts/ThemeContext";
@@ -29,7 +29,7 @@ export default function App() {
   }, [colorScheme]);
 
   return (
-    <SQLiteProvider databaseName="test.db">
+    //<SQLiteProvider databaseName="antogeitor_data.db">
       <ThemeProvider>
         <NavigationContainer theme={theme}>
           <Stack.Navigator initialRouteName="Calendario">
@@ -43,6 +43,6 @@ export default function App() {
           backgroundColor={colorScheme === "dark" ? "#000000" : "#FFFFFF"}
         />
       </ThemeProvider>
-    </SQLiteProvider>
+    //</SQLiteProvider>
   );
 }
