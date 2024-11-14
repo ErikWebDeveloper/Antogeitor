@@ -9,7 +9,8 @@ import CalendarioScreen from "./src/screens/CalendarioScreen";
 import RegistrosScreen from "./src/screens/RegistrosScreen";
 import ProductosScreen from "./src/screens/ProductosScreen";
 
-//import { SQLiteProvider } from "expo-sqlite";
+import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
+import { initDB } from "./src/db/db";
 
 import { lightTheme, darkTheme } from "./src/themes/themes";
 import { ThemeProvider } from "./src/contexts/ThemeContext";
@@ -29,20 +30,36 @@ export default function App() {
   }, [colorScheme]);
 
   return (
-    //<SQLiteProvider databaseName="antogeitor_data.db">
+    <SQLiteProvider databaseName="antogeitor_data.db">
       <ThemeProvider>
-        <NavigationContainer theme={theme}>
-          <Stack.Navigator initialRouteName="Calendario">
-            <Stack.Screen name="Calendario" component={CalendarioScreen} />
-            <Stack.Screen name="Registros" component={RegistrosScreen} />
-            <Stack.Screen name="Productos" component={ProductosScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <MainApp theme={theme} />
         <StatusBar
           style={colorScheme === "dark" ? "light" : "dark"}
           backgroundColor={colorScheme === "dark" ? "#000000" : "#FFFFFF"}
         />
       </ThemeProvider>
-    //</SQLiteProvider>
+    </SQLiteProvider>
   );
 }
+
+const MainApp = ({ theme }) => {
+  const db = useSQLiteContext();
+
+  useEffect(() => {
+    const initDatabase = async () => {
+      await initDB(db);
+      console.log("[OK] Init DataBase")
+    };
+    initDatabase();
+  }, []);
+
+  return (
+    <NavigationContainer theme={theme}>
+      <Stack.Navigator initialRouteName="Calendario">
+        <Stack.Screen name="Calendario" component={CalendarioScreen} />
+        <Stack.Screen name="Registros" component={RegistrosScreen} />
+        <Stack.Screen name="Productos" component={ProductosScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};

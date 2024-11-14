@@ -49,7 +49,7 @@ export default function CalendarioScreen({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       obtenerTodoAsyncStorage();
-      logAllAsyncStorage();
+      //logAllAsyncStorage();
     }, [])
   );
 
