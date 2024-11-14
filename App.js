@@ -7,6 +7,9 @@ import { StatusBar } from "expo-status-bar";
 
 import CalendarioScreen from "./src/screens/CalendarioScreen";
 import RegistrosScreen from "./src/screens/RegistrosScreen";
+import ProductosScreen from "./src/screens/ProductosScreen";
+
+import { SQLiteProvider } from "expo-sqlite";
 
 import { lightTheme, darkTheme } from "./src/themes/themes";
 import { ThemeProvider } from "./src/contexts/ThemeContext";
@@ -26,17 +29,20 @@ export default function App() {
   }, [colorScheme]);
 
   return (
-    <ThemeProvider>
-      <NavigationContainer theme={theme}>
-        <Stack.Navigator initialRouteName="Calendario">
-          <Stack.Screen name="Calendario" component={CalendarioScreen} />
-          <Stack.Screen name="Registros" component={RegistrosScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-      <StatusBar
-        style={colorScheme === "dark" ? "light" : "dark"} 
-        backgroundColor={colorScheme === "dark" ? "#000000" : "#FFFFFF"}
-      />
-    </ThemeProvider>
+    <SQLiteProvider databaseName="test.db">
+      <ThemeProvider>
+        <NavigationContainer theme={theme}>
+          <Stack.Navigator initialRouteName="Calendario">
+            <Stack.Screen name="Calendario" component={CalendarioScreen} />
+            <Stack.Screen name="Registros" component={RegistrosScreen} />
+            <Stack.Screen name="Productos" component={ProductosScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <StatusBar
+          style={colorScheme === "dark" ? "light" : "dark"}
+          backgroundColor={colorScheme === "dark" ? "#000000" : "#FFFFFF"}
+        />
+      </ThemeProvider>
+    </SQLiteProvider>
   );
 }
