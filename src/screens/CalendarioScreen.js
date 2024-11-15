@@ -67,7 +67,7 @@ export default function CalendarioScreen({ navigation }) {
       <View>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Productos");
+            navigation.navigate("Alimentos");
           }}
         >
           <Text
@@ -83,7 +83,7 @@ export default function CalendarioScreen({ navigation }) {
               marginHorizontal: "auto",
             }}
           >
-            Añadir productos
+            Añadir alimentos
           </Text>
         </TouchableOpacity>
       </View>

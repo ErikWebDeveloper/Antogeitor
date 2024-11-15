@@ -1,3 +1,5 @@
+import { deleteAll } from "./models/productosModel";
+
 export async function initDB(db) {
   await db.execAsync(`
 PRAGMA journal_mode = WAL;

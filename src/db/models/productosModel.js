@@ -6,6 +6,33 @@ export async function get(db) {
   return allRows;
 }
 
+export async function deleteAll(db) {
+  let query = await db.runAsync("DELETE FROM productos;");
+  return query;
+}
+
+export async function deleteById(db, id) {
+  const statement = await db.prepareAsync(
+    "DELETE FROM productos WHERE id = $id"
+  );
+  try {
+    await statement.executeAsync({
+      $id: id,
+    });
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message || "Error al eliminar los datos",
+    };
+  } finally {
+    await statement.finalizeAsync();
+  }
+}
+
 export async function insert(db, value = { comida: null, calorias: null }) {
   const statement = await db.prepareAsync(
     "INSERT INTO productos (comida, calorias) VALUES ($comida, $calorias)"
@@ -24,7 +51,6 @@ export async function insert(db, value = { comida: null, calorias: null }) {
       changes: result.changes,
     };
   } catch (error) {
-    console.error("[ERROR] Insert", error);
     return {
       success: false,
       error: error.message || "Error al insertar los datos",
@@ -33,4 +59,3 @@ export async function insert(db, value = { comida: null, calorias: null }) {
     await statement.finalizeAsync();
   }
 }
-

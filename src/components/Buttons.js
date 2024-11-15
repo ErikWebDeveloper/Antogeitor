@@ -5,7 +5,7 @@ export function ButtonRound({ label, onPress, styles }) {
     <>
     <TouchableOpacity onPress={onPress}>
       <Text
-        style={[ styles, {
+        style={[ {
           color: "white",
           fontSize: 14,
           borderRadius: 50,
@@ -14,7 +14,7 @@ export function ButtonRound({ label, onPress, styles }) {
           padding: 10,
           width: "80%",
           marginHorizontal: "auto",
-        }]}
+        }, styles]}
       >
         {label}
       </Text>

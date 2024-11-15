@@ -58,7 +58,7 @@ const MainApp = ({ theme }) => {
       <Stack.Navigator initialRouteName="Calendario">
         <Stack.Screen name="Calendario" component={CalendarioScreen} />
         <Stack.Screen name="Registros" component={RegistrosScreen} />
-        <Stack.Screen name="Productos" component={ProductosScreen} />
+        <Stack.Screen name="Alimentos" component={ProductosScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

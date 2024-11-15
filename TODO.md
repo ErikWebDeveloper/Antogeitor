@@ -1,12 +1,13 @@
 ## Features para la versión inicial
 
 - [x] Añadir soporte para tema oscuro
-- [ ] Añadir etiqueta de colores a los ítems
+- [ ] Añadir etiqueta de colores a los ítems del registro diario.
+- [ ] Añadir importar alimento en el formulario de registro diario.
 - [x] Hacer responsive los ítems y la tabla en screen RegistrosScreen
 - [ ] Guardar datos en SQLite
 - [ ] Compatibilidad para IOs
 - [x] Contador de calorías en cada registro y cada ítem en el registro.
-- [ ] Crear screen para almacenar platos e importarlos al input de registros.
+- [x] Crear screen para almacenar alimentos.
 
 
 

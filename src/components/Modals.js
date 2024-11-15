@@ -1,5 +1,6 @@
 import { Modal, View, Text, StyleSheet } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
+
 export function ModalSlideBottom({
   children,
   title = "",
@@ -18,10 +19,16 @@ export function ModalSlideBottom({
       style={{ backgroundColor: "red" }}
     >
       <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-        <Text style={{ fontSize: 22 }}>{title}</Text>
-        {children}
-
+        <View
+          style={[
+            styles.modalContent,
+            { backgroundColor: theme.colors.background },
+          ]}
+        >
+          <Text style={{ fontSize: 22, color: theme.colors.text }}>
+            {title}
+          </Text>
+          {children}
         </View>
       </View>
     </Modal>
@@ -38,6 +45,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: "100%",
     padding: 20,
+    gap: 10,
     backgroundColor: "white",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
