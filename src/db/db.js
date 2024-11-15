@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS fechas (
 );
 `);
 
- await db.execAsync(`
+  await db.execAsync(`
 PRAGMA journal_mode = WAL;
 CREATE TABLE IF NOT EXISTS comidas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,13 +21,21 @@ CREATE TABLE IF NOT EXISTS comidas (
     calorias INTEGER,
     FOREIGN KEY (fecha_id) REFERENCES fechas(id)
 );
+`);
 
+  await db.execAsync(`
+PRAGMA journal_mode = WAL;
+CREATE TABLE IF NOT EXISTS productos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    comida TEXT NOT NULL,
+    calorias INTEGER
+);
 `);
 }
 
-export async function getData(db){
-    const allRows = await db.getAllAsync("SELECT * FROM test");
-    for (const row of allRows) {
-      console.log(row.id, row.value, row.intValue);
-    }
+export async function getData(db) {
+  const allRows = await db.getAllAsync("SELECT * FROM test");
+  for (const row of allRows) {
+    console.log(row.id, row.value, row.intValue);
+  }
 }

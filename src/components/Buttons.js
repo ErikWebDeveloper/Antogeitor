@@ -1,11 +1,11 @@
 import { TouchableOpacity, Text } from "react-native";
 
-export function ButtonRound({ label, onPress }) {
+export function ButtonRound({ label, onPress, styles }) {
   return (
     <>
     <TouchableOpacity onPress={onPress}>
       <Text
-        style={{
+        style={[ styles, {
           color: "white",
           fontSize: 14,
           borderRadius: 50,
@@ -14,7 +14,7 @@ export function ButtonRound({ label, onPress }) {
           padding: 10,
           width: "80%",
           marginHorizontal: "auto",
-        }}
+        }]}
       >
         {label}
       </Text>
