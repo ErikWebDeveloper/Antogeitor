@@ -33,6 +33,20 @@ CREATE TABLE IF NOT EXISTS productos (
     calorias INTEGER
 );
 `);
+
+  /*await db.execAsync(`
+INSERT INTO fechas (fecha) VALUES ("2024-11-15");
+INSERT INTO fechas (fecha) VALUES ("2024-11-16");
+INSERT INTO comidas (fecha_id, hora, etiqueta, duracion, intensidad, comida, antojo, calorias) 
+VALUES (1, "08:00", "Desayuno", 30, 3, "Manzana", 1, 95);
+INSERT INTO comidas (fecha_id, hora, etiqueta, duracion, intensidad, comida, antojo, calorias) 
+VALUES (1, "13:00", "Almuerzo", 60, 5, "Ensalada César", 0, 250);
+INSERT INTO comidas (fecha_id, hora, etiqueta, duracion, intensidad, comida, antojo, calorias) 
+VALUES (2, "08:30", "Desayuno", 20, 2, "Tostada con aguacate", 1, 150);
+INSERT INTO comidas (fecha_id, hora, etiqueta, duracion, intensidad, comida, antojo, calorias) 
+VALUES (2, "19:00", "Cena", 45, 4, "Sopa de verduras", 0, 180);
+
+  `);*/
 }
 
 export async function getData(db) {
@@ -40,4 +54,15 @@ export async function getData(db) {
   for (const row of allRows) {
     console.log(row.id, row.value, row.intValue);
   }
+}
+
+async function createData(db) {
+  await db.execAsync(`
+PRAGMA journal_mode = WAL;
+CREATE TABLE IF NOT EXISTS productos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    comida TEXT NOT NULL,
+    calorias INTEGER
+);
+`);
 }

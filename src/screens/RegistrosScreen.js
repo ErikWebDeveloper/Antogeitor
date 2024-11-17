@@ -17,6 +17,9 @@ import { Picker } from "@react-native-picker/picker";
 import { formatearFecha } from "../utils/date";
 import { useTheme } from "../contexts/ThemeContext";
 
+import { useSQLiteContext } from "expo-sqlite";
+import { getAllByFecha } from "../db/models/comidasModel";
+
 const opcionesComida = {
   comidas: [
     { label: "🥞 Desayuno", value: "🥞 Desayuno" },
@@ -45,6 +48,8 @@ const opcionesComida = {
 export default function RegistrosScreen({ route }) {
   const { theme } = useTheme();
   const { date } = route.params;
+  const db = useSQLiteContext();
+  console.log(date);
   const [registros, setRegistros] = useState([]);
 
   const [antojo, setAntojo] = useState(false);
@@ -82,11 +87,18 @@ export default function RegistrosScreen({ route }) {
 
   const cargarRegistros = async () => {
     try {
+      let result = await getAllByFecha(db, date);
+      if(!result.success) return console.log("Error al obtener los datos.");
+      if(result.rows){
+        setRegistros(result.rows)
+        return result.rows
+      }
+      /*
       const registrosGuardados = await AsyncStorage.getItem(date);
       if (registrosGuardados) {
         setRegistros(JSON.parse(registrosGuardados));
         return JSON.parse(registrosGuardados);
-      }
+      }*/
     } catch (error) {
       console.error("Error al cargar los registros:", error);
     }
