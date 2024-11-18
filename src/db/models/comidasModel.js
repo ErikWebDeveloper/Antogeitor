@@ -18,7 +18,10 @@ JOIN
 ON 
     comidas.fecha_id = fechas.id
 WHERE 
-    fechas.fecha = $fecha;`);
+    fechas.fecha = $fecha;
+ORDER BY 
+    comidas.hora ASC;
+    `);
 
   try {
     let result = await statement.executeAsync({
@@ -27,10 +30,23 @@ WHERE
 
     let allRows = await result.getAllAsync();
 
+    // Convertir todos los valores a string excepto "antojo", que será booleano
+    const transformedRows = allRows.map((row) => {
+      const transformedRow = {};
+      for (const key in row) {
+        if (key === "antojo") {
+          transformedRow[key] = row[key] === 1 ? 1 : 0; // 1 se convierte en true, cualquier otro valor en false
+        } else {
+          transformedRow[key] = row[key] !== null ? String(row[key]) : null;
+        }
+      }
+      return transformedRow;
+    });
+
     return {
       success: true,
       result: result,
-      rows: allRows,
+      rows: transformedRows,
     };
   } catch (error) {
     return {
@@ -141,7 +157,7 @@ export async function deleteById(db, id) {
     if (result.changes === 0) {
       return {
         success: false,
-        message: `No record found with id ${id}`,
+        error: `No record found with id ${id}`,
       };
     }
 
@@ -158,4 +174,3 @@ export async function deleteById(db, id) {
     await statement.finalizeAsync();
   }
 }
-

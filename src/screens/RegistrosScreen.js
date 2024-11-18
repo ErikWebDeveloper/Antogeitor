@@ -89,14 +89,30 @@ export default function RegistrosScreen({ route }) {
     }
   };
 
+  const ordenarRegistros = (registrosDesordenados) => {
+    let result = registrosDesordenados.sort((a, b) => {
+      const [horaA, minutoA] = a.hora.split(":").map(Number);
+      const [horaB, minutoB] = b.hora.split(":").map(Number);
+
+      const tiempoA = horaA * 60 + minutoA;
+      const tiempoB = horaB * 60 + minutoB;
+
+      return tiempoA - tiempoB;
+    });
+
+    return result;
+  };
+
   const cargarRegistros = async () => {
     try {
+      // Obtener todos los datos
       let result = await getAllByFecha(db, date);
+
       if (!result.success) return console.log("Error al obtener los datos.");
+
       if (result.rows) {
-        setRegistros(result.rows);
-        console.log(`[+]REGISTROS del dia ${date}:`);
-        console.log(result.rows);
+        let registrosOrdenados = ordenarRegistros(result.rows);
+        setRegistros(registrosOrdenados);
         return result.rows;
       }
       /*
@@ -164,7 +180,7 @@ export default function RegistrosScreen({ route }) {
   };
 
   const agregarRegistro = async () => {
-    if (hora && etiqueta && duracion && intensidad && comida) {
+    if (hora && etiqueta && comida && duracion && intensidad) {
       const horaMin = hora.toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
@@ -307,6 +323,8 @@ export default function RegistrosScreen({ route }) {
   const eliminarRegistro = async () => {
     let { id } = selectedRegistro;
     let result = await deleteById(db, id);
+
+    if (!result.success) return console.log(result.error);
 
     await cargarRegistros();
     guardarRegistros();
