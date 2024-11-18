@@ -34,15 +34,17 @@ CREATE TABLE IF NOT EXISTS productos (
 );
 `);
 
+  await getAllData(db);
+
   /*await db.execAsync(`
 INSERT INTO fechas (fecha) VALUES ("2024-11-15");
 INSERT INTO fechas (fecha) VALUES ("2024-11-16");
 INSERT INTO comidas (fecha_id, hora, etiqueta, duracion, intensidad, comida, antojo, calorias) 
-VALUES (1, "08:00", "Desayuno", 30, 3, "Manzana", 1, 95);
+VALUES (1, "08:00", "Desayuno", 30, 3, "Manzana", 1, 0);
 INSERT INTO comidas (fecha_id, hora, etiqueta, duracion, intensidad, comida, antojo, calorias) 
 VALUES (1, "13:00", "Almuerzo", 60, 5, "Ensalada César", 0, 250);
 INSERT INTO comidas (fecha_id, hora, etiqueta, duracion, intensidad, comida, antojo, calorias) 
-VALUES (2, "08:30", "Desayuno", 20, 2, "Tostada con aguacate", 1, 150);
+VALUES (2, "08:30", "Desayuno", 20, 2, "Tostada con aguacate", 1, 0);
 INSERT INTO comidas (fecha_id, hora, etiqueta, duracion, intensidad, comida, antojo, calorias) 
 VALUES (2, "19:00", "Cena", 45, 4, "Sopa de verduras", 0, 180);
 
@@ -65,4 +67,23 @@ CREATE TABLE IF NOT EXISTS productos (
     calorias INTEGER
 );
 `);
+}
+async function getAllData(db) {
+  console.log("[+]FECHAS")
+  let allRows = await db.getAllAsync("SELECT * FROM fechas");
+  for (const row of allRows) {
+    console.log(row);
+  }
+
+  console.log("[+]COMIDAS");
+  allRows = await db.getAllAsync("SELECT * FROM comidas;");
+  for (const row of allRows) {
+    console.log(row);
+  }
+
+  console.log("[+]PRODUCTOS");
+  allRows = await db.getAllAsync("SELECT * FROM productos");
+  for (const row of allRows) {
+    console.log(row);
+  }
 }

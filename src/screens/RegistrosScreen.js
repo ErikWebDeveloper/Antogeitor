@@ -18,7 +18,12 @@ import { formatearFecha } from "../utils/date";
 import { useTheme } from "../contexts/ThemeContext";
 
 import { useSQLiteContext } from "expo-sqlite";
-import { getAllByFecha } from "../db/models/comidasModel";
+import {
+  getAllByFecha,
+  insert,
+  updateById,
+  deleteById,
+} from "../db/models/comidasModel";
 
 const opcionesComida = {
   comidas: [
@@ -47,9 +52,8 @@ const opcionesComida = {
 
 export default function RegistrosScreen({ route }) {
   const { theme } = useTheme();
-  const { date } = route.params;
+  const { date, dateId } = route.params;
   const db = useSQLiteContext();
-  console.log(date);
   const [registros, setRegistros] = useState([]);
 
   const [antojo, setAntojo] = useState(false);
@@ -88,10 +92,12 @@ export default function RegistrosScreen({ route }) {
   const cargarRegistros = async () => {
     try {
       let result = await getAllByFecha(db, date);
-      if(!result.success) return console.log("Error al obtener los datos.");
-      if(result.rows){
-        setRegistros(result.rows)
-        return result.rows
+      if (!result.success) return console.log("Error al obtener los datos.");
+      if (result.rows) {
+        setRegistros(result.rows);
+        console.log(`[+]REGISTROS del dia ${date}:`);
+        console.log(result.rows);
+        return result.rows;
       }
       /*
       const registrosGuardados = await AsyncStorage.getItem(date);
@@ -105,7 +111,30 @@ export default function RegistrosScreen({ route }) {
   };
 
   const contabilizarTotalCalorias = async () => {
-    // Obtener los registros del dia y convertir a JSON
+    try {
+      let result = await getAllByFecha(db, date);
+      if (!result.success) return console.log("Error al obtener los datos.");
+      if (result.rows) {
+        // Recorrer los registros y sumar las calorias
+        const totalCalorias = result.rows
+          .map((registro) => {
+            const calorias = parseInt(registro.calorias, 10); // Intenta convertir a número
+            return isNaN(calorias) ? 0 : calorias; // Si no es un número, devuelve 0
+          })
+          .reduce((total, calorias) => total + calorias, 0); // Suma todas las calorías
+
+        setTotalCalorias(totalCalorias);
+      }
+      /*
+      const registrosGuardados = await AsyncStorage.getItem(date);
+      if (registrosGuardados) {
+        setRegistros(JSON.parse(registrosGuardados));
+        return JSON.parse(registrosGuardados);
+      }*/
+    } catch (error) {
+      console.error("Error al cargar los registros:", error);
+    }
+    /*// Obtener los registros del dia y convertir a JSON
     let registrosGuardados = await AsyncStorage.getItem(date);
     registrosGuardados = JSON.parse(registrosGuardados);
 
@@ -120,12 +149,13 @@ export default function RegistrosScreen({ route }) {
       })
       .reduce((total, calorias) => total + calorias, 0); // Suma todas las calorías
 
-    setTotalCalorias(totalCalorias);
+    setTotalCalorias(totalCalorias);*/
   };
 
   const guardarRegistros = async (nuevosRegistros) => {
     try {
-      await AsyncStorage.setItem(date, JSON.stringify(nuevosRegistros));
+      //await insert(db, date, nuevosRegistros);
+      //await AsyncStorage.setItem(date, JSON.stringify(nuevosRegistros));
       await limpiarRegistroVacio();
       await contabilizarTotalCalorias();
     } catch (error) {
@@ -133,7 +163,7 @@ export default function RegistrosScreen({ route }) {
     }
   };
 
-  const agregarRegistro = () => {
+  const agregarRegistro = async () => {
     if (hora && etiqueta && duracion && intensidad && comida) {
       const horaMin = hora.toLocaleTimeString([], {
         hour: "2-digit",
@@ -141,7 +171,60 @@ export default function RegistrosScreen({ route }) {
       });
       let nuevosRegistros = [...registros];
 
+      // Valores a gurdar
+      let values = {
+        antojo,
+        hora: horaMin,
+        etiqueta,
+        duracion,
+        intensidad,
+        comida,
+        calorias,
+      };
+
       // Si estamos editando un registro, lo reemplazamos
+      if (selectedRegistro) {
+        const index = registros.findIndex(
+          (registro) => registro === selectedRegistro
+        );
+        //console.log(nuevosRegistros[index].id);
+        let id = nuevosRegistros[index].id;
+
+        let result = await updateById(db, id, values);
+
+        if (!result.success) return console.log("Error al actualizar");
+
+        nuevosRegistros[index] = {
+          antojo,
+          hora: horaMin,
+          etiqueta,
+          duracion,
+          intensidad,
+          comida,
+          calorias,
+        };
+      } else {
+        console.log("[+]NUEVO REGISTRO***");
+        let result = await insert(db, date, values);
+        console.log(result);
+        if (!result.success) return console.log("Error al insertar registro.");
+
+        nuevosRegistros.push({
+          antojo,
+          hora: horaMin,
+          etiqueta,
+          duracion,
+          intensidad,
+          comida,
+          calorias,
+        });
+      }
+
+      await cargarRegistros();
+      guardarRegistros(nuevosRegistros);
+      resetFormulario();
+
+      /*// Si estamos editando un registro, lo reemplazamos
       if (selectedRegistro) {
         const index = registros.findIndex(
           (registro) => registro === selectedRegistro
@@ -167,7 +250,7 @@ export default function RegistrosScreen({ route }) {
         });
       }
 
-      //nuevosRegistros.sort((a, b) => a.hora.localeCompare(b.hora));
+
       nuevosRegistros.sort((a, b) => {
         const [horaA, minutoA] = a.hora.split(":").map(Number);
         const [horaB, minutoB] = b.hora.split(":").map(Number);
@@ -179,7 +262,7 @@ export default function RegistrosScreen({ route }) {
       });
       setRegistros(nuevosRegistros);
       guardarRegistros(nuevosRegistros);
-      resetFormulario();
+      resetFormulario();*/
     } else {
       Alert.alert(
         "⚠️ Nota importante",
@@ -206,7 +289,7 @@ export default function RegistrosScreen({ route }) {
 
   const openModal = (registro) => {
     setSelectedRegistro(registro);
-    setAntojo(registro.antojo);
+    setAntojo(registro.antojo === 0 ? false : true);
     setHora(new Date(`1970-01-01T${registro.hora}:00`));
     setEtiqueta(registro.etiqueta);
     setDuracion(registro.duracion);
@@ -222,11 +305,18 @@ export default function RegistrosScreen({ route }) {
   };
 
   const eliminarRegistro = async () => {
-    const nuevosRegistros = registros.filter((r) => r !== selectedRegistro);
+    let { id } = selectedRegistro;
+    let result = await deleteById(db, id);
+
+    await cargarRegistros();
+    guardarRegistros();
+    await contabilizarTotalCalorias();
+    setModalVisible(false);
+    /*const nuevosRegistros = registros.filter((r) => r !== selectedRegistro);
     setRegistros(nuevosRegistros);
     guardarRegistros(nuevosRegistros);
     await contabilizarTotalCalorias();
-    setModalVisible(false);
+    setModalVisible(false);*/
   };
 
   const handleSwitchAntojo = (value) => {
@@ -476,7 +566,7 @@ export default function RegistrosScreen({ route }) {
                 <TextInput
                   style={[styles.input, { marginBottom: 20 }]}
                   onChangeText={(prevVal) => setCalorias(prevVal)}
-                  value={calorias}
+                  value={calorias.toString()}
                   placeholder="🔥 Calorías..."
                   placeholderTextColor={"grey"}
                   keyboardType="numeric"

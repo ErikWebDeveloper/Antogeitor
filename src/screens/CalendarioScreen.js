@@ -11,7 +11,7 @@ export default function CalendarioScreen({ navigation }) {
   const { theme, themeCalendar } = useTheme();
 
   const handleDayPress = (day) => {
-    navigation.navigate("Registros", { date: day.dateString });
+    navigation.navigate("Registros", { date: day.dateString, dateId: null });
   };
 
   const logAllAsyncStorage = async () => {
