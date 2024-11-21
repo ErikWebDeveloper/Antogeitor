@@ -115,12 +115,6 @@ export default function RegistrosScreen({ route }) {
         setRegistros(registrosOrdenados);
         return result.rows;
       }
-      /*
-      const registrosGuardados = await AsyncStorage.getItem(date);
-      if (registrosGuardados) {
-        setRegistros(JSON.parse(registrosGuardados));
-        return JSON.parse(registrosGuardados);
-      }*/
     } catch (error) {
       console.error("Error al cargar los registros:", error);
     }
@@ -170,8 +164,6 @@ export default function RegistrosScreen({ route }) {
 
   const guardarRegistros = async (nuevosRegistros) => {
     try {
-      //await insert(db, date, nuevosRegistros);
-      //await AsyncStorage.setItem(date, JSON.stringify(nuevosRegistros));
       await limpiarRegistroVacio();
       await contabilizarTotalCalorias();
     } catch (error) {
@@ -288,12 +280,7 @@ export default function RegistrosScreen({ route }) {
   };
 
   const resetFormulario = () => {
-    setAntojo(false);
-    setHora(null);
-    setCalorias("");
-    handleSwitchAntojo(false);
-    setSelectedRegistro(null);
-    setModalVisibleRegistro(false);
+    initialState();
   };
 
   const handleTimeChange = (event, selectedTime) => {
@@ -329,12 +316,7 @@ export default function RegistrosScreen({ route }) {
     await cargarRegistros();
     guardarRegistros();
     await contabilizarTotalCalorias();
-    setModalVisible(false);
-    /*const nuevosRegistros = registros.filter((r) => r !== selectedRegistro);
-    setRegistros(nuevosRegistros);
-    guardarRegistros(nuevosRegistros);
-    await contabilizarTotalCalorias();
-    setModalVisible(false);*/
+    initialState();
   };
 
   const handleSwitchAntojo = (value) => {
@@ -353,6 +335,20 @@ export default function RegistrosScreen({ route }) {
       setComida("0");
       setCalorias("");
     }
+  };
+
+  const initialState = () => {
+    setSelectedRegistro(null);
+    handleSwitchAntojo(false);
+    setAntojo("");
+    setHora(null);
+    setEtiqueta("");
+    setDuracion("");
+    setIntensidad("");
+    setComida("");
+    setCalorias("");
+    setModalVisible(false);
+    setModalVisibleRegistro(false);
   };
 
   return (
@@ -605,7 +601,7 @@ export default function RegistrosScreen({ route }) {
         visible={modalVisible}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={initialState}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
