@@ -69,13 +69,6 @@ export default function RegistrosScreen({ route }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleRegistro, setModalVisibleRegistro] = useState(false);
 
-  useEffect(() => {
-    limpiarRegistroVacio();
-    cargarRegistros();
-    contabilizarTotalCalorias();
-    handleSwitchAntojo(antojo);
-  }, []);
-
   const limpiarRegistroVacio = async () => {
     try {
       let registro = await AsyncStorage.getItem(date);
@@ -135,188 +128,9 @@ export default function RegistrosScreen({ route }) {
 
         setTotalCalorias(totalCalorias);
       }
-      /*
-      const registrosGuardados = await AsyncStorage.getItem(date);
-      if (registrosGuardados) {
-        setRegistros(JSON.parse(registrosGuardados));
-        return JSON.parse(registrosGuardados);
-      }*/
     } catch (error) {
       console.error("Error al cargar los registros:", error);
     }
-    /*// Obtener los registros del dia y convertir a JSON
-    let registrosGuardados = await AsyncStorage.getItem(date);
-    registrosGuardados = JSON.parse(registrosGuardados);
-
-    // Verificar que tenga registros
-    if (!registrosGuardados) return;
-
-    // Recorrer los registros y sumar las calorias
-    const totalCalorias = registrosGuardados
-      .map((registro) => {
-        const calorias = parseInt(registro.calorias, 10); // Intenta convertir a número
-        return isNaN(calorias) ? 0 : calorias; // Si no es un número, devuelve 0
-      })
-      .reduce((total, calorias) => total + calorias, 0); // Suma todas las calorías
-
-    setTotalCalorias(totalCalorias);*/
-  };
-
-  const guardarRegistros = async (nuevosRegistros) => {
-    try {
-      await limpiarRegistroVacio();
-      await contabilizarTotalCalorias();
-    } catch (error) {
-      console.error("Error al guardar los registros:", error);
-    }
-  };
-
-  const agregarRegistro = async () => {
-    if (hora && etiqueta && comida && duracion && intensidad) {
-      const horaMin = hora.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      let nuevosRegistros = [...registros];
-
-      // Valores a gurdar
-      let values = {
-        antojo,
-        hora: horaMin,
-        etiqueta,
-        duracion,
-        intensidad,
-        comida,
-        calorias,
-      };
-
-      // Si estamos editando un registro, lo reemplazamos
-      if (selectedRegistro) {
-        const index = registros.findIndex(
-          (registro) => registro === selectedRegistro
-        );
-        //console.log(nuevosRegistros[index].id);
-        let id = nuevosRegistros[index].id;
-
-        let result = await updateById(db, id, values);
-
-        if (!result.success) return console.log("Error al actualizar");
-
-        nuevosRegistros[index] = {
-          antojo,
-          hora: horaMin,
-          etiqueta,
-          duracion,
-          intensidad,
-          comida,
-          calorias,
-        };
-      } else {
-        console.log("[+]NUEVO REGISTRO***");
-        let result = await insert(db, date, values);
-        console.log(result);
-        if (!result.success) return console.log("Error al insertar registro.");
-
-        nuevosRegistros.push({
-          antojo,
-          hora: horaMin,
-          etiqueta,
-          duracion,
-          intensidad,
-          comida,
-          calorias,
-        });
-      }
-
-      await cargarRegistros();
-      guardarRegistros(nuevosRegistros);
-      resetFormulario();
-
-      /*// Si estamos editando un registro, lo reemplazamos
-      if (selectedRegistro) {
-        const index = registros.findIndex(
-          (registro) => registro === selectedRegistro
-        );
-        nuevosRegistros[index] = {
-          antojo,
-          hora: horaMin,
-          etiqueta,
-          duracion,
-          intensidad,
-          comida,
-          calorias,
-        };
-      } else {
-        nuevosRegistros.push({
-          antojo,
-          hora: horaMin,
-          etiqueta,
-          duracion,
-          intensidad,
-          comida,
-          calorias,
-        });
-      }
-
-
-      nuevosRegistros.sort((a, b) => {
-        const [horaA, minutoA] = a.hora.split(":").map(Number);
-        const [horaB, minutoB] = b.hora.split(":").map(Number);
-
-        const tiempoA = horaA * 60 + minutoA;
-        const tiempoB = horaB * 60 + minutoB;
-
-        return tiempoA - tiempoB;
-      });
-      setRegistros(nuevosRegistros);
-      guardarRegistros(nuevosRegistros);
-      resetFormulario();*/
-    } else {
-      Alert.alert(
-        "⚠️ Nota importante",
-        "Para almacenar un registro, ¡no puede haber ningún campo vacío!"
-      );
-    }
-  };
-
-  const resetFormulario = () => {
-    initialState();
-  };
-
-  const handleTimeChange = (event, selectedTime) => {
-    setShowTimePicker(false);
-    if (selectedTime) {
-      setHora(selectedTime);
-    }
-  };
-
-  const openModal = (registro) => {
-    setSelectedRegistro(registro);
-    setAntojo(registro.antojo === 0 ? false : true);
-    setHora(new Date(`1970-01-01T${registro.hora}:00`));
-    setEtiqueta(registro.etiqueta);
-    setDuracion(registro.duracion);
-    setIntensidad(registro.intensidad);
-    setComida(registro.comida);
-    setCalorias(registro.calorias);
-    setModalVisible(true);
-  };
-
-  const editarRegistro = () => {
-    setModalVisible(false);
-    setModalVisibleRegistro(true);
-  };
-
-  const eliminarRegistro = async () => {
-    let { id } = selectedRegistro;
-    let result = await deleteById(db, id);
-
-    if (!result.success) return console.log(result.error);
-
-    await cargarRegistros();
-    guardarRegistros();
-    await contabilizarTotalCalorias();
-    initialState();
   };
 
   const handleSwitchAntojo = (value) => {
@@ -339,7 +153,6 @@ export default function RegistrosScreen({ route }) {
 
   const initialState = () => {
     setSelectedRegistro(null);
-    handleSwitchAntojo(false);
     setAntojo("");
     setHora(null);
     setEtiqueta("");
@@ -347,8 +160,106 @@ export default function RegistrosScreen({ route }) {
     setIntensidad("");
     setComida("");
     setCalorias("");
+    handleSwitchAntojo(false);
     setModalVisible(false);
     setModalVisibleRegistro(false);
+  };
+
+  const resetApp = async () => {
+    limpiarRegistroVacio();
+    cargarRegistros();
+    contabilizarTotalCalorias();
+    initialState();
+  };
+
+  useEffect(() => {
+    resetApp();
+  }, []);
+
+  const agregarRegistro = async () => {
+    if (hora && etiqueta && comida && duracion && intensidad) {
+      const horaMin = hora.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      let nuevosRegistros = [...registros];
+
+      // Valores a gurdar
+      let values = {
+        antojo,
+        hora: horaMin,
+        etiqueta,
+        duracion,
+        intensidad,
+        comida,
+        calorias,
+      };
+
+      // Si estamos editando un registro
+      if (selectedRegistro) {
+        // Obtener id del registro
+        const index = registros.findIndex(
+          (registro) => registro === selectedRegistro
+        );
+        let id = nuevosRegistros[index].id;
+
+        // Actualizar rgistro
+        let result = await updateById(db, id, values);
+        if (!result.success) return console.log("Error al actualizar");
+        // Si es una nueva insercion
+      } else {
+        // Insertar un nuevo registro
+        let result = await insert(db, date, values);
+        if (!result.success) return console.log("Error al insertar registro.");
+      }
+
+      // Resetar la app
+      await resetApp();
+    } else {
+      Alert.alert(
+        "⚠️ Nota importante",
+        "Para almacenar un registro, ¡no puede haber ningún campo vacío!"
+      );
+    }
+  };
+
+  const eliminarRegistro = async () => {
+    // Obtener id del registro y eliminar
+    let { id } = selectedRegistro;
+    let result = await deleteById(db, id);
+
+    if (!result.success) return console.log(result.error);
+
+    await resetApp();
+  };
+
+  const openModalOptions = (registro) => {
+    setSelectedRegistro(registro);
+    setAntojo(registro.antojo === 0 ? false : true);
+    setHora(new Date(`1970-01-01T${registro.hora}:00`));
+    setEtiqueta(registro.etiqueta);
+    setDuracion(registro.duracion);
+    setIntensidad(registro.intensidad);
+    setComida(registro.comida);
+    setCalorias(registro.calorias);
+    setModalVisible(true);
+  };
+
+  const openModalForm = () => {
+    //setSelectedRegistro(null); // Limpiar el registro seleccionado si se está agregando uno nuevo
+    setModalVisibleRegistro(true);
+  };
+
+  const editarRegistro = () => {
+    setModalVisible(false);
+    setModalVisibleRegistro(true);
+  };
+
+  const handleTimeChange = (event, selectedTime) => {
+    setShowTimePicker(false);
+    if (selectedTime) {
+      setHora(selectedTime);
+    }
   };
 
   return (
@@ -376,7 +287,7 @@ export default function RegistrosScreen({ route }) {
                 styles.registroItem,
                 { backgroundColor: item.antojo ? "#fec8c8" : "#c8defe" },
               ]}
-              onPress={() => openModal(item)}
+              onPress={() => openModalOptions(item)}
             >
               {/* Header */}
               <View style={{ flexDirection: "row", opacity: 0.5, gap: 5 }}>
@@ -450,13 +361,7 @@ export default function RegistrosScreen({ route }) {
 
       {/* Boton para abrir formulario registro */}
       <View style={styles.butonsContainer}>
-        <Button
-          title="📌 Nuevo Registro"
-          onPress={() => {
-            setSelectedRegistro(null); // Limpiar el registro seleccionado si se está agregando uno nuevo
-            setModalVisibleRegistro(true);
-          }}
-        />
+        <Button title="📌 Nuevo Registro" onPress={openModalForm} />
       </View>
 
       {/* Modal formulario registro */}
@@ -464,7 +369,7 @@ export default function RegistrosScreen({ route }) {
         visible={modalVisibleRegistro}
         transparent={true}
         animationType="slide"
-        onRequestClose={resetFormulario}
+        onRequestClose={initialState}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
