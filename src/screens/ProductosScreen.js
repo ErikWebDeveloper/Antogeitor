@@ -6,13 +6,10 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { ModalSlideBottom } from "../components/Modals";
 import { ButtonRound } from "../components/Buttons";
 import { AlertBox } from "../components/Alerts";
+import { Card } from "../components/Cards";
 
 import { useSQLiteContext } from "expo-sqlite";
-import {
-  get,
-  insert,
-  deleteById,
-} from "../db/models/productosModel";
+import { get, insert, deleteById } from "../db/models/productosModel";
 
 export default function ProductosScreen() {
   const db = useSQLiteContext();
@@ -194,10 +191,6 @@ export default function ProductosScreen() {
   );
 }
 
-const Card = ({ children }) => {
-  return <View style={styles.cardContainer}>{children}</View>;
-};
-
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 15,
@@ -220,11 +213,5 @@ const styles = StyleSheet.create({
   },
   tableContainer: {
     gap: 5,
-  },
-  cardContainer: {
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: "rgba(0, 112, 255, 0.2)",
-    marginBottom: 15
   },
 });

@@ -17,6 +17,9 @@ import { Picker } from "@react-native-picker/picker";
 import { formatearFecha } from "../utils/date";
 import { useTheme } from "../contexts/ThemeContext";
 
+import { ModalSlideBottom } from "../components/Modals";
+import { ButtonRound } from "../components/Buttons";
+
 import { useSQLiteContext } from "expo-sqlite";
 import {
   getAllByFecha,
@@ -361,183 +364,165 @@ export default function RegistrosScreen({ route }) {
 
       {/* Boton para abrir formulario registro */}
       <View style={styles.butonsContainer}>
-        <Button title="📌 Nuevo Registro" onPress={openModalForm} />
+        <ButtonRound label="📌 Nuevo Registro" onPress={openModalForm} />
       </View>
 
       {/* Modal formulario registro */}
-      <Modal
-        visible={modalVisibleRegistro}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={initialState}
+      <ModalSlideBottom
+        modalVisible={modalVisibleRegistro}
+        title={selectedRegistro ? "Editar registro" : "Nuevo registro"}
+        onClose={initialState}
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={{ fontSize: 22 }}>
-              {selectedRegistro ? "Editar registro" : "Nuevo registro"}
-            </Text>
+        <View style={[styles.switchContainer]}>
+          <Text style={{ marginRight: 10, color: "grey" }}>
+            {!antojo ? "Antojo" : "🤤"}:
+          </Text>
+          <Switch value={antojo} onValueChange={handleSwitchAntojo} />
+        </View>
 
-            <View style={[styles.switchContainer]}>
-              <Text style={{ marginRight: 10, color: "grey" }}>
-                {!antojo ? "Antojo" : "🤤"}:
-              </Text>
-              <Switch value={antojo} onValueChange={handleSwitchAntojo} />
-            </View>
+        <TouchableOpacity
+          onPress={() => setShowTimePicker(true)}
+          style={styles.timeInput}
+        >
+          <Text>
+            {hora
+              ? hora.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : "🕓 Seleccionar Hora"}
+          </Text>
+        </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => setShowTimePicker(true)}
-              style={styles.timeInput}
-            >
-              <Text>
-                {hora
-                  ? hora.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  : "🕓 Seleccionar Hora"}
-              </Text>
-            </TouchableOpacity>
-            {showTimePicker && (
-              <DateTimePicker
-                value={hora || new Date()}
-                mode="time"
-                display="default"
-                onChange={handleTimeChange}
-              />
-            )}
+        {showTimePicker && (
+          <DateTimePicker
+            value={hora || new Date()}
+            mode="time"
+            display="default"
+            onChange={handleTimeChange}
+          />
+        )}
 
+        <Picker
+          selectedValue={etiqueta}
+          onValueChange={(itemValue) => setEtiqueta(itemValue)}
+          style={[styles.input, { color: etiqueta ? "black" : "gray" }]}
+        >
+          {/* Renderizamos el elemento de selección inicial dependiendo del estado antojo */}
+          <Picker.Item
+            label={
+              antojo ? "Seleccione un antojo" : "Seleccione una comida del día"
+            }
+            value=""
+          />
+
+          {/* Renderizamos las opciones de comida o antojo según el estado */}
+          {antojo
+            ? opcionesComida.antojos.map((antojoItem) => (
+                <Picker.Item
+                  key={antojoItem.value}
+                  label={antojoItem.label}
+                  value={antojoItem.value}
+                />
+              ))
+            : opcionesComida.comidas.map((comida) => (
+                <Picker.Item
+                  key={comida.value}
+                  label={comida.label}
+                  value={comida.value}
+                />
+              ))}
+        </Picker>
+
+        {antojo && (
+          <>
+            {/* Picker para duración */}
             <Picker
-              selectedValue={etiqueta}
-              onValueChange={(itemValue) => setEtiqueta(itemValue)}
+              selectedValue={duracion}
+              onValueChange={(itemValue) => setDuracion(itemValue)}
               style={[styles.input, { color: etiqueta ? "black" : "gray" }]}
             >
-              {/* Renderizamos el elemento de selección inicial dependiendo del estado antojo */}
-              <Picker.Item
-                label={
-                  antojo
-                    ? "Seleccione un antojo"
-                    : "Seleccione una comida del día"
-                }
-                value=""
-              />
-
-              {/* Renderizamos las opciones de comida o antojo según el estado */}
-              {antojo
-                ? opcionesComida.antojos.map((antojoItem) => (
-                    <Picker.Item
-                      key={antojoItem.value}
-                      label={antojoItem.label}
-                      value={antojoItem.value}
-                    />
-                  ))
-                : opcionesComida.comidas.map((comida) => (
-                    <Picker.Item
-                      key={comida.value}
-                      label={comida.label}
-                      value={comida.value}
-                    />
-                  ))}
+              <Picker.Item label="Seleccione duración" value="" />
+              <Picker.Item label="5 minutos" value="5" />
+              <Picker.Item label="15 minutos" value="15" />
+              <Picker.Item label="30 minutos" value="30" />
+              <Picker.Item label="1 hora" value="60" />
+              <Picker.Item label="2 horas" value="120" />
             </Picker>
 
-            {antojo && (
-              <>
-                {/* Picker para duración */}
-                <Picker
-                  selectedValue={duracion}
-                  onValueChange={(itemValue) => setDuracion(itemValue)}
-                  style={[styles.input, { color: etiqueta ? "black" : "gray" }]}
-                >
-                  <Picker.Item label="Seleccione duración" value="" />
-                  <Picker.Item label="5 minutos" value="5" />
-                  <Picker.Item label="15 minutos" value="15" />
-                  <Picker.Item label="30 minutos" value="30" />
-                  <Picker.Item label="1 hora" value="60" />
-                  <Picker.Item label="2 horas" value="120" />
-                </Picker>
+            {/* Picker para intensidad */}
+            <Picker
+              selectedValue={intensidad}
+              onValueChange={(itemValue) => setIntensidad(itemValue)}
+              style={[styles.input, { color: etiqueta ? "black" : "gray" }]}
+            >
+              <Picker.Item label="Seleccione intensidad" value="" />
+              <Picker.Item label="⭐" value="1" />
+              <Picker.Item label="⭐⭐" value="2" />
+              <Picker.Item label="⭐⭐⭐" value="3" />
+              <Picker.Item label="⭐⭐⭐⭐" value="4" />
+              <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
+            </Picker>
+          </>
+        )}
 
-                {/* Picker para intensidad */}
-                <Picker
-                  selectedValue={intensidad}
-                  onValueChange={(itemValue) => setIntensidad(itemValue)}
-                  style={[styles.input, { color: etiqueta ? "black" : "gray" }]}
-                >
-                  <Picker.Item label="Seleccione intensidad" value="" />
-                  <Picker.Item label="⭐" value="1" />
-                  <Picker.Item label="⭐⭐" value="2" />
-                  <Picker.Item label="⭐⭐⭐" value="3" />
-                  <Picker.Item label="⭐⭐⭐⭐" value="4" />
-                  <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
-                </Picker>
-              </>
-            )}
-
-            {!antojo && (
-              <>
-                <TextInput
-                  style={[styles.input, { marginBottom: 20 }]}
-                  onChangeText={(prevVal) => setComida(prevVal)}
-                  value={comida}
-                  placeholder="🥗 Comida..."
-                  placeholderTextColor={"grey"}
-                  keyboardType="default"
-                />
-
-                <TextInput
-                  style={[styles.input, { marginBottom: 20 }]}
-                  onChangeText={(prevVal) => setCalorias(prevVal)}
-                  value={calorias.toString()}
-                  placeholder="🔥 Calorías..."
-                  placeholderTextColor={"grey"}
-                  keyboardType="numeric"
-                />
-              </>
-            )}
-
-            <Button
-              title={selectedRegistro ? "Guardar Cambios" : "Agregar Registro"}
-              onPress={agregarRegistro}
+        {!antojo && (
+          <>
+            <TextInput
+              style={[styles.input, { marginBottom: 20 }]}
+              onChangeText={(prevVal) => setComida(prevVal)}
+              value={comida}
+              placeholder="🥗 Comida..."
+              placeholderTextColor={"grey"}
+              keyboardType="default"
             />
-          </View>
-        </View>
-      </Modal>
+
+            <TextInput
+              style={[styles.input, { marginBottom: 20 }]}
+              onChangeText={(prevVal) => setCalorias(prevVal)}
+              value={calorias.toString()}
+              placeholder="🔥 Calorías..."
+              placeholderTextColor={"grey"}
+              keyboardType="numeric"
+            />
+          </>
+        )}
+
+        <ButtonRound
+          label={selectedRegistro ? "Guardar Cambios" : "Agregar Registro"}
+          onPress={agregarRegistro}
+        />
+      </ModalSlideBottom>
 
       {/* Modal para editar o eliminar */}
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={initialState}
+      <ModalSlideBottom
+        modalVisible={modalVisible}
+        title="Seleccione una opción"
+        onClose={initialState}
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={{ fontSize: 22, marginBottom: 15 }}>
-              Seleccione una opción
-            </Text>
-            <View
-              style={{
-                gap: 15,
-              }}
-            >
-              <Button title="✏️ Editar" onPress={editarRegistro} />
-              <Button
-                title="🗑️ Eliminar"
-                color="#f86c6c"
-                onPress={() => {
-                  Alert.alert(
-                    "Eliminar registro",
-                    "¿Estás seguro de que deseas eliminar este registro?",
-                    [
-                      { text: "Cancelar", style: "cancel" },
-                      { text: "Eliminar", onPress: eliminarRegistro },
-                    ]
-                  );
-                }}
-              />
-            </View>
-            {/*<Button title="Cancelar" onPress={() => setModalVisible(false)} />*/}
-          </View>
+        <View
+          style={{
+            gap: 15,
+          }}
+        >
+          <ButtonRound label="✏️ Editar" onPress={editarRegistro} />
+          <ButtonRound
+            label="🗑️ Eliminar"
+            styles={{backgroundColor : "#f86c6c"}}
+            onPress={() => {
+              Alert.alert(
+                "Eliminar registro",
+                "¿Estás seguro de que deseas eliminar este registro?",
+                [
+                  { text: "Cancelar", style: "cancel" },
+                  { text: "Eliminar", onPress: eliminarRegistro },
+                ]
+              );
+            }}
+          />
         </View>
-      </Modal>
+        {/*<Button title="Cancelar" onPress={() => setModalVisible(false)} />*/}
+      </ModalSlideBottom>
     </View>
   );
 }
