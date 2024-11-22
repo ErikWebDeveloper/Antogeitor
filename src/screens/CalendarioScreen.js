@@ -4,9 +4,12 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Calendar } from "react-native-calendars";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../contexts/ThemeContext";
+import { useSQLiteContext } from "expo-sqlite";
+import { getAll as getFechas } from "../db/models/fechasModel";
 import * as Lang from "../lang/CalendarLang"; // Configurar español
 
 export default function CalendarioScreen({ navigation }) {
+  const db = useSQLiteContext();
   const [markedDates, setMarkedDates] = useState({});
   const { theme, themeCalendar } = useTheme();
 
@@ -30,17 +33,16 @@ export default function CalendarioScreen({ navigation }) {
 
   const obtenerTodoAsyncStorage = async () => {
     try {
-      //await AsyncStorage.clear();
-      // Obtener todas las claves almacenadas en AsyncStorage
-      const allKeys = await AsyncStorage.getAllKeys();
+      let { rows, success } = await getFechas(db);
 
-      // Convertir las claves en el formato adecuado para markedDates
-      const datesWithRecords = allKeys.reduce((acc, date) => {
-        acc[date] = { marked: true };
+      if (!success) return null;
+
+      const newMarkedDates = rows.reduce((acc, item) => {
+        acc[item.fecha] = { marked: true };
         return acc;
       }, {});
 
-      setMarkedDates(datesWithRecords);
+      setMarkedDates(newMarkedDates);
     } catch (error) {
       console.error("Error al obtener todos los datos de AsyncStorage:", error);
     }

@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS productos (
 );
 `);
 
+  //await clearAllTables(db);
   await getAllData(db);
 
   /*await db.execAsync(`
@@ -68,8 +69,9 @@ CREATE TABLE IF NOT EXISTS productos (
 );
 `);
 }
+
 async function getAllData(db) {
-  console.log("[+]FECHAS")
+  console.log("[+]FECHAS");
   let allRows = await db.getAllAsync("SELECT * FROM fechas");
   for (const row of allRows) {
     console.log(row);
@@ -85,5 +87,32 @@ async function getAllData(db) {
   allRows = await db.getAllAsync("SELECT * FROM productos");
   for (const row of allRows) {
     console.log(row);
+  }
+}
+
+async function clearAllTables(db) {
+  try {
+    // Iniciar una transacción
+    await db.execAsync("BEGIN TRANSACTION;");
+
+    // Borrar datos de cada tabla
+    await db.execAsync("DELETE FROM comidas;");
+    await db.execAsync("DELETE FROM productos;");
+    await db.execAsync("DELETE FROM fechas;");
+
+    // Confirmar la transacción
+    await db.execAsync("COMMIT;");
+
+    return {
+      success: true,
+      message: "Todos los datos fueron eliminados exitosamente de las tablas.",
+    };
+  } catch (error) {
+    // Revertir cambios si ocurre un error
+    await db.execAsync("ROLLBACK;");
+    return {
+      success: false,
+      error: error.message || "Error al eliminar los datos de las tablas.",
+    };
   }
 }

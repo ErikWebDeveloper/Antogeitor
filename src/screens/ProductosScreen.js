@@ -64,7 +64,6 @@ export default function ProductosScreen() {
 
   // Abrir modal CRUD
   const openModalCRUD = (product) => {
-    console.log(product.calorias);
     setProductSelected(product);
     setComida(product.comida);
     setCalorias(`${product.calorias}`);

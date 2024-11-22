@@ -27,6 +27,10 @@ import {
   updateById,
   deleteById,
 } from "../db/models/comidasModel";
+import {
+  get as getFecha,
+  removeById as deleteByIdFecha,
+} from "../db/models/fechasModel";
 
 const opcionesComida = {
   comidas: [
@@ -74,14 +78,18 @@ export default function RegistrosScreen({ route }) {
 
   const limpiarRegistroVacio = async () => {
     try {
-      let registro = await AsyncStorage.getItem(date);
-      let registroJson = registro ? JSON.parse(registro) : null;
-      // Si hay registro almacendo como item, pero esta vacio, lo eliminamos
-      if (registroJson?.length === 0 && registroJson !== null) {
-        await AsyncStorage.removeItem(date);
-      }
+      // Obtener la fecha en la base de datos
+      let { row, success } = await getFecha(db, date);
+      if (!success)
+        return Alert.alert(
+          "⚠️ Error",
+          "Error al obtener el indentificativo de la fecha del registro."
+        );
+
+      // Borrar fecha si no hay registros relacionados
+      if (row !== null) await deleteByIdFecha(db, row?.id);
     } catch (error) {
-      console.error("Error al limpiar el registro:", error);
+      Alert.alert("⚠️ Error", `Error al limpiar el registro: ${error}`);
     }
   };
 
@@ -104,22 +112,28 @@ export default function RegistrosScreen({ route }) {
       // Obtener todos los datos
       let result = await getAllByFecha(db, date);
 
-      if (!result.success) return console.log("Error al obtener los datos.");
+      if (!result.success)
+        return Alert.alert("⚠️ Error", "Error al obtener los datos.");
 
+      // Limpiar fecha si no tiene regitro
+      if (result.rows.length === 0) await limpiarRegistroVacio();
+
+      // Recuperar la informacion de registros
       if (result.rows) {
         let registrosOrdenados = ordenarRegistros(result.rows);
         setRegistros(registrosOrdenados);
         return result.rows;
       }
     } catch (error) {
-      console.error("Error al cargar los registros:", error);
+      Alert.alert("⚠️ Error", `Error al cargar los registros ${error}`);
     }
   };
 
   const contabilizarTotalCalorias = async () => {
     try {
       let result = await getAllByFecha(db, date);
-      if (!result.success) return console.log("Error al obtener los datos.");
+      if (!result.success)
+        return Alert.alert("⚠️ Error", "Error al obtener los datos.");
       if (result.rows) {
         // Recorrer los registros y sumar las calorias
         const totalCalorias = result.rows
@@ -132,7 +146,7 @@ export default function RegistrosScreen({ route }) {
         setTotalCalorias(totalCalorias);
       }
     } catch (error) {
-      console.error("Error al cargar los registros:", error);
+      Alert.alert("⚠️ Error", `Error al cargar los registros: ${error}`);
     }
   };
 
@@ -169,9 +183,8 @@ export default function RegistrosScreen({ route }) {
   };
 
   const resetApp = async () => {
-    limpiarRegistroVacio();
-    cargarRegistros();
-    contabilizarTotalCalorias();
+    await cargarRegistros();
+    await contabilizarTotalCalorias();
     initialState();
   };
 
@@ -206,14 +219,18 @@ export default function RegistrosScreen({ route }) {
         );
         let id = nuevosRegistros[index].id;
 
-        // Actualizar rgistro
+        // Actualizar registro
         let result = await updateById(db, id, values);
-        if (!result.success) return console.log("Error al actualizar");
+
+        if (!result.success)
+          return Alert.alert("⚠️ Error", `Error al actualizar`);
         // Si es una nueva insercion
       } else {
         // Insertar un nuevo registro
         let result = await insert(db, date, values);
-        if (!result.success) return console.log("Error al insertar registro.");
+
+        if (!result.success)
+          return Alert.alert("⚠️ Error", "Error al insertar registro.");
       }
 
       // Resetar la app
@@ -231,7 +248,11 @@ export default function RegistrosScreen({ route }) {
     let { id } = selectedRegistro;
     let result = await deleteById(db, id);
 
-    if (!result.success) return console.log(result.error);
+    if (!result.success)
+      return Alert.alert(
+        "⚠️ Error",
+        `Error al eliminar registro: ${result.error}`
+      );
 
     await resetApp();
   };
@@ -508,7 +529,7 @@ export default function RegistrosScreen({ route }) {
           <ButtonRound label="✏️ Editar" onPress={editarRegistro} />
           <ButtonRound
             label="🗑️ Eliminar"
-            styles={{backgroundColor : "#f86c6c"}}
+            styles={{ backgroundColor: "#f86c6c" }}
             onPress={() => {
               Alert.alert(
                 "Eliminar registro",

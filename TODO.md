@@ -4,7 +4,7 @@
 - [ ] Añadir etiqueta de colores a los ítems del registro diario.
 - [ ] Añadir importar alimento en el formulario de registro diario.
 - [x] Hacer responsive los ítems y la tabla en screen RegistrosScreen
-- [ ] Guardar datos en SQLite
+- [x] Guardar datos en SQLite
 - [ ] Compatibilidad para IOs
 - [x] Contador de calorías en cada registro y cada ítem en el registro.
 - [x] Crear screen para almacenar alimentos.

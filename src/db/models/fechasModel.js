@@ -50,7 +50,7 @@ export async function get(db, fecha) {
 
     return {
       success: true,
-      rows: row,
+      row: row,
     };
   } catch (error) {
     return {
@@ -63,8 +63,45 @@ export async function get(db, fecha) {
 }
 
 export async function getAll(db) {
-  const allRows = await db.getAllAsync("SELECT * FROM fechas");
-  for (const row of allRows) {
-    console.log(row.id, row.fecha);
+  const statement = await db.prepareAsync(`SELECT * FROM fechas;`);
+
+  try {
+    const result = await statement.executeAsync();
+    const rows = await result.getAllAsync();
+
+    return {
+      success: true,
+      rows: rows,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message || "Error al obtener los datos",
+    };
+  } finally {
+    await statement.finalizeAsync();
+  }
+}
+
+
+export async function removeById(db, id) {
+  const statement = await db.prepareAsync(`DELETE FROM fechas WHERE id = $id;`);
+
+  try {
+    await statement.executeAsync({
+      $id: id,
+    });
+
+    return {
+      success: true,
+      message: "Registro eliminado con éxito",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message || "Error al eliminar el registro",
+    };
+  } finally {
+    await statement.finalizeAsync();
   }
 }
