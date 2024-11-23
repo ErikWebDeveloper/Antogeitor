@@ -13,10 +13,6 @@ export default function CalendarioScreen({ navigation }) {
   const [markedDates, setMarkedDates] = useState({});
   const { theme, themeCalendar } = useTheme();
 
-  const handleDayPress = (day) => {
-    navigation.navigate("Registros", { date: day.dateString, dateId: null });
-  };
-
   const logAllAsyncStorage = async () => {
     try {
       const keys = await AsyncStorage.getAllKeys(); // Obtener todas las claves
@@ -31,7 +27,7 @@ export default function CalendarioScreen({ navigation }) {
     }
   };
 
-  const obtenerTodoAsyncStorage = async () => {
+  const obtenerFechasConDatos = async () => {
     try {
       let { rows, success } = await getFechas(db);
 
@@ -50,10 +46,14 @@ export default function CalendarioScreen({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      obtenerTodoAsyncStorage();
+      obtenerFechasConDatos();
       //logAllAsyncStorage();
     }, [])
   );
+
+  const handleDayPress = (day) => {
+    navigation.navigate("Registros", { date: day.dateString, dateId: null });
+  };
 
   return (
     <View
@@ -66,6 +66,7 @@ export default function CalendarioScreen({ navigation }) {
         firstDay={1}
         locale={"es"}
       />
+
       <View>
         <TouchableOpacity
           onPress={() => {
