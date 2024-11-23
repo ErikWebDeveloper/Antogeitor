@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { Calendar } from "react-native-calendars";
@@ -11,7 +11,8 @@ import * as Lang from "../lang/CalendarLang"; // Configurar español
 export default function CalendarioScreen({ navigation }) {
   const db = useSQLiteContext();
   const [markedDates, setMarkedDates] = useState({});
-  const { theme, themeCalendar } = useTheme();
+  const { theme, themeCalendar, colorScheme } = useTheme();
+  const [key, setKey] = useState(0);
 
   const logAllAsyncStorage = async () => {
     try {
@@ -44,6 +45,7 @@ export default function CalendarioScreen({ navigation }) {
     }
   };
 
+  // Cargar datos al iniciar
   useFocusEffect(
     useCallback(() => {
       obtenerFechasConDatos();
@@ -51,8 +53,15 @@ export default function CalendarioScreen({ navigation }) {
     }, [])
   );
 
+  // Forzar renderización del calendario en cambios de tema
+  useFocusEffect(
+    useCallback(() => {
+      setKey((prevVal) => prevVal + 1);
+    }, [colorScheme])
+  );
+
   const handleDayPress = (day) => {
-    navigation.navigate("Registros", { date: day.dateString, dateId: null });
+    navigation.navigate("Registros", { date: day.dateString });
   };
 
   return (
@@ -60,6 +69,7 @@ export default function CalendarioScreen({ navigation }) {
       style={{ flex: 1 /*justifyContent: "center", alignItems: "center"*/ }}
     >
       <Calendar
+        key={key}
         theme={themeCalendar}
         onDayPress={handleDayPress}
         markedDates={markedDates}

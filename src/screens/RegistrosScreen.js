@@ -60,7 +60,7 @@ const opcionesComida = {
 
 export default function RegistrosScreen({ route }) {
   const { theme } = useTheme();
-  const { date, dateId } = route.params;
+  const { date } = route.params;
   const db = useSQLiteContext();
   const [registros, setRegistros] = useState([]);
   const [products, setProducts] = useState([]);
