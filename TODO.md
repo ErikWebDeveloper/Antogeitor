@@ -8,7 +8,8 @@
 - [ ] Compatibilidad para IOS.
 - [x] Contador de calorías en cada registro y cada ítem en el registro.
 - [x] Crear screen para almacenar alimentos.
-- [ ] Hacer responsive todas las partes de la app.
+- [x] Hacer responsive todas las partes de la app.
 - [x] Hacer que el calendario cambie de tema de forma diámica.
-- [ ] Migrar sistema de almacenamiento de AsyncStorage a SQLite.
+- [x] Migrar sistema de almacenamiento de AsyncStorage a SQLite.
+- [ ] Mejorar consistencia de datos en operaciones CRUD.
 

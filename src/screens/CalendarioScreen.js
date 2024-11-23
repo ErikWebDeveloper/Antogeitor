@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../contexts/ThemeContext";
 import { useSQLiteContext } from "expo-sqlite";
 import { getAll as getFechas } from "../db/models/fechasModel";
+import { insert as insertComida } from "../db/models/comidasModel";
 import * as Lang from "../lang/CalendarLang"; // Configurar español
 
 export default function CalendarioScreen({ navigation }) {
@@ -13,6 +14,7 @@ export default function CalendarioScreen({ navigation }) {
   const [markedDates, setMarkedDates] = useState({});
   const { theme, themeCalendar, colorScheme } = useTheme();
   const [key, setKey] = useState(0);
+  const [migrate, setMigrate] = useState(false);
 
   const logAllAsyncStorage = async () => {
     try {
@@ -60,6 +62,61 @@ export default function CalendarioScreen({ navigation }) {
     }, [colorScheme])
   );
 
+  const migrateToSQLite = async () => {
+    try {
+      // Obtener datos
+      const keys = await AsyncStorage.getAllKeys();
+      if (keys.length === 0) return; // Si está vacío, salimos de la función
+
+      // Obtener todos los items de AsyncStorage
+      const items = await AsyncStorage.multiGet(keys);
+
+      for (const [key, value] of items) {
+        // Parsear el valor a JSON
+        const valuesJSON = JSON.parse(value);
+
+        // Recorrer cada registro del día
+        for (const row of valuesJSON) {
+          // Valores a guardar
+          const dataForDb = {
+            antojo: row.antojo,
+            hora: row.hora,
+            etiqueta: row.etiqueta,
+            duracion: row.duracion,
+            intensidad: row.intensidad,
+            comida: row.comida,
+            calorias: row.calorias === undefined ? "0" : row.calorias,
+          };
+
+          // Llamar a la función para insertar en SQLite
+          await insertComida(db, key, dataForDb);
+        }
+      }
+
+      // Borrar AsyncStorage
+      await AsyncStorage.clear();
+      setMigrate(false);
+    } catch (error) {
+      console.error("Error verificando AsyncStorage:", error);
+      return false; // En caso de error, asumimos que la migración falló
+    }
+  };
+
+  const needMigrate = async () => {
+    // Verificar AsyncStorage
+    const keys = await AsyncStorage.getAllKeys();
+    if (keys.length === 0) return;
+
+    setMigrate(true);
+  };
+
+  // Hacer migración de datos si es necesario
+  useFocusEffect(
+    useCallback(() => {
+      needMigrate();
+    }, [])
+  );
+
   const handleDayPress = (day) => {
     navigation.navigate("Registros", { date: day.dateString });
   };
@@ -100,6 +157,32 @@ export default function CalendarioScreen({ navigation }) {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {migrate && (
+        <View>
+          <TouchableOpacity
+            onPress={() => {
+              migrateToSQLite();
+            }}
+          >
+            <Text
+              style={{
+                color: "white",
+                fontSize: 14,
+                borderRadius: 50,
+                backgroundColor: "#e16666",
+                textAlign: "center",
+                padding: 10,
+                marginVertical: 50,
+                width: "80%",
+                marginHorizontal: "auto",
+              }}
+            >
+              Migrar datos
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }

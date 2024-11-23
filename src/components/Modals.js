@@ -16,7 +16,6 @@ export function ModalSlideBottom({
       transparent={true}
       animationType="slide"
       onRequestClose={onClose}
-      style={{ backgroundColor: "red" }}
     >
       <View style={styles.modalContainer}>
         <View
@@ -39,8 +38,9 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     justifyContent: "flex-end",
+    marginTop: 50,
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.1)",
+    backgroundColor: "rgba(0,0,0,0.3)",
   },
   modalContent: {
     width: "100%",

@@ -36,6 +36,31 @@ CREATE TABLE IF NOT EXISTS productos (
 
   //await clearAllTables(db);
   await getAllData(db);
+  
+  /*await db.execAsync(`
+INSERT INTO productos (comida, calorias) VALUES
+("🍕 Pizza", 50),
+("🍔 Hamburguesa", 60),
+("🌭 Hot Dog", 40),
+("🍟 Papas Fritas", 35),
+("🍿 Palomitas", 25),
+("🥪 Sándwich", 45),
+("🌮 Taco", 55),
+("🌯 Burrito", 65),
+("🥗 Ensalada", 15),
+("🍣 Sushi", 30),
+("🍩 Dona", 70),
+("🍪 Galleta", 80),
+("🍫 Chocolate", 90),
+("🍎 Manzana", 20),
+("🍌 Plátano", 25),
+("🍓 Fresa", 10),
+("🍉 Sandía", 15),
+("🍇 Uvas", 12),
+("🍍 Piña", 18),
+("🥥 Coco", 30);
+
+  `);*/
 
   /*await db.execAsync(`
 INSERT INTO fechas (fecha) VALUES ("2024-11-15");

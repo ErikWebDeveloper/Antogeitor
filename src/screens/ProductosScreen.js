@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { TextInput, StyleSheet } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
 
 import { ModalSlideBottom } from "../components/Modals";
 import { ButtonRound } from "../components/Buttons";
@@ -9,7 +9,12 @@ import { AlertBox } from "../components/Alerts";
 import { Card } from "../components/Cards";
 
 import { useSQLiteContext } from "expo-sqlite";
-import { get, insert, deleteById } from "../db/models/productosModel";
+import {
+  get,
+  insert,
+  updateById,
+  deleteById,
+} from "../db/models/productosModel";
 
 export default function ProductosScreen() {
   const db = useSQLiteContext();
@@ -30,18 +35,33 @@ export default function ProductosScreen() {
   const getProducts = async () => {
     let products = await get(db);
     setProducts(products);
+    console.log(products);
   };
 
   // Guardar producto
   const guardarDatos = async () => {
-    let result = await insert(db, { comida, calorias });
-
-    if (!result)
-      return AlertBox({
-        title: "⚠️ Error",
-        text: "Error al insertar los datos",
-        buttons: [{ text: "OK" }],
+    if (productSelected) {
+      let result = await updateById(db, productSelected.id, {
+        comida,
+        calorias,
       });
+
+      if (!result)
+        return AlertBox({
+          title: "⚠️ Error",
+          text: "Error al insertar los datos",
+          buttons: [{ text: "OK" }],
+        });
+    } else {
+      let result = await insert(db, { comida, calorias });
+
+      if (!result)
+        return AlertBox({
+          title: "⚠️ Error",
+          text: "Error al insertar los datos",
+          buttons: [{ text: "OK" }],
+        });
+    }
 
     await getProducts(db);
     setModalVisibleForm(false);
@@ -99,7 +119,34 @@ export default function ProductosScreen() {
 
       {/* Tabla de productos */}
       <View style={styles.tableContainer}>
-        {products.map((product, index) => (
+        <FlatList
+          data={products}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <Card>
+              <TouchableOpacity
+                onPress={() => {
+                  openModalCRUD(item);
+                }}
+              >
+                <Text style={{ color: theme.colors.text, fontSize: 14 }}>
+                  {item.comida}
+                </Text>
+                <Text
+                  style={{
+                    color: theme.colors.text,
+                    textAlign: "right",
+                    fontSize: 12,
+                    opacity: 0.5,
+                  }}
+                >
+                  🔥 {item.calorias}
+                </Text>
+              </TouchableOpacity>
+            </Card>
+          )}
+        />
+        {/*products.map((product, index) => (
           <Card key={product.id}>
             <TouchableOpacity
               onPress={() => {
@@ -121,18 +168,20 @@ export default function ProductosScreen() {
               </Text>
             </TouchableOpacity>
           </Card>
-        ))}
+        ))*/}
       </View>
 
       {/* Boton para abrir el modal de productos */}
-      <ButtonRound
-        label={"👉 Añadir alimento"}
-        style={styles.butonsContainer}
-        onPress={() => {
-          resetForm();
-          setModalVisibleForm(true);
-        }}
-      />
+      <View style={styles.butonsContainer}>
+        <ButtonRound
+          label={"👉 Añadir alimento"}
+          style={styles.butonsContainer}
+          onPress={() => {
+            resetForm();
+            setModalVisibleForm(true);
+          }}
+        />
+      </View>
 
       {/* Modal formulario de productos */}
       <ModalSlideBottom
@@ -212,5 +261,6 @@ const styles = StyleSheet.create({
   },
   tableContainer: {
     gap: 5,
+    marginBottom: 130,
   },
 });

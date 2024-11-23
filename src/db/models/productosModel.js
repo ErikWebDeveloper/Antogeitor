@@ -59,3 +59,35 @@ export async function insert(db, value = { comida: null, calorias: null }) {
     await statement.finalizeAsync();
   }
 }
+
+export async function updateById(
+  db,
+  id,
+  value = { comida: null, calorias: null }
+) {
+  const statement = await db.prepareAsync(
+    "UPDATE productos SET comida = $comida, calorias = $calorias WHERE id = $id"
+  );
+
+  try {
+    const result = await statement.executeAsync({
+      $id: id,
+      $comida: value.comida,
+      $calorias: value.calorias,
+    });
+    console.log("[OK] Update", result.changes);
+
+    return {
+      success: true,
+      changes: result.changes, // Cantidad de filas afectadas
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message || "Error al actualizar los datos",
+    };
+  } finally {
+    await statement.finalizeAsync();
+  }
+}
+

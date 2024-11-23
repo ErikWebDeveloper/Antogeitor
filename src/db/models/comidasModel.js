@@ -59,7 +59,6 @@ ORDER BY
 }
 
 export async function insert(db, date, values) {
-  console.log(date);
   let result = await insertFecha(db, date);
 
   if (!result.id) return console.log("Error al obtener fecha id");
