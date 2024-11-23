@@ -2,7 +2,7 @@
 
 - [x] Añadir soporte para tema oscuro
 - [ ] Añadir etiqueta de colores a los ítems del registro diario.
-- [ ] Añadir importar alimento en el formulario de registro diario.
+- [x] Añadir importar alimento en el formulario de registro diario.
 - [x] Hacer responsive los ítems y la tabla en screen RegistrosScreen
 - [x] Guardar datos en SQLite
 - [ ] Compatibilidad para IOs

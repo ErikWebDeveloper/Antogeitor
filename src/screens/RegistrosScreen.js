@@ -31,6 +31,7 @@ import {
   get as getFecha,
   removeById as deleteByIdFecha,
 } from "../db/models/fechasModel";
+import { get as getProductos } from "../db/models/productosModel";
 
 const opcionesComida = {
   comidas: [
@@ -62,6 +63,7 @@ export default function RegistrosScreen({ route }) {
   const { date, dateId } = route.params;
   const db = useSQLiteContext();
   const [registros, setRegistros] = useState([]);
+  const [products, setProducts] = useState([]);
 
   const [antojo, setAntojo] = useState(false);
   const [hora, setHora] = useState(null);
@@ -73,8 +75,22 @@ export default function RegistrosScreen({ route }) {
   const [totalCalorias, setTotalCalorias] = useState("");
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedRegistro, setSelectedRegistro] = useState(null);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleRegistro, setModalVisibleRegistro] = useState(false);
+  const [modalVisibleAlimentos, setModalVisibleAlimentos] = useState(false);
+
+  // Obtener la lista de productos
+  const getProducts = async () => {
+    let products = await getProductos(db);
+    setProducts(products);
+    console.log(products);
+  };
+
+  // Cargar productos al iniciar
+  useEffect(() => {
+    getProducts();
+  }, []);
 
   const limpiarRegistroVacio = async () => {
     try {
@@ -274,9 +290,21 @@ export default function RegistrosScreen({ route }) {
     setModalVisibleRegistro(true);
   };
 
+  const openModalAlimentos = () => {
+    setModalVisibleRegistro(false);
+    setModalVisibleAlimentos(true);
+  };
+
   const editarRegistro = () => {
     setModalVisible(false);
     setModalVisibleRegistro(true);
+  };
+
+  const importarAlimento = (alimento) => {
+    setComida(alimento.comida);
+    setCalorias(alimento.calorias);
+    setModalVisibleRegistro(true);
+    setModalVisibleAlimentos(false);
   };
 
   const handleTimeChange = (event, selectedTime) => {
@@ -405,7 +433,7 @@ export default function RegistrosScreen({ route }) {
           onPress={() => setShowTimePicker(true)}
           style={styles.timeInput}
         >
-          <Text>
+          <Text style={{ color: theme.colors.text }}>
             {hora
               ? hora.toLocaleTimeString([], {
                   hour: "2-digit",
@@ -427,7 +455,10 @@ export default function RegistrosScreen({ route }) {
         <Picker
           selectedValue={etiqueta}
           onValueChange={(itemValue) => setEtiqueta(itemValue)}
-          style={[styles.input, { color: etiqueta ? "black" : "gray" }]}
+          style={[
+            styles.input,
+            { color: etiqueta ? theme.colors.text : "gray" },
+          ]}
         >
           {/* Renderizamos el elemento de selección inicial dependiendo del estado antojo */}
           <Picker.Item
@@ -461,7 +492,10 @@ export default function RegistrosScreen({ route }) {
             <Picker
               selectedValue={duracion}
               onValueChange={(itemValue) => setDuracion(itemValue)}
-              style={[styles.input, { color: etiqueta ? "black" : "gray" }]}
+              style={[
+                styles.input,
+                { color: duracion ? theme.colors.text : "gray" },
+              ]}
             >
               <Picker.Item label="Seleccione duración" value="" />
               <Picker.Item label="5 minutos" value="5" />
@@ -475,7 +509,10 @@ export default function RegistrosScreen({ route }) {
             <Picker
               selectedValue={intensidad}
               onValueChange={(itemValue) => setIntensidad(itemValue)}
-              style={[styles.input, { color: etiqueta ? "black" : "gray" }]}
+              style={[
+                styles.input,
+                { color: intensidad ? theme.colors.text : "gray" },
+              ]}
             >
               <Picker.Item label="Seleccione intensidad" value="" />
               <Picker.Item label="⭐" value="1" />
@@ -489,8 +526,20 @@ export default function RegistrosScreen({ route }) {
 
         {!antojo && (
           <>
-            <TextInput
+            <TouchableOpacity
               style={[styles.input, { marginBottom: 20 }]}
+              onPress={openModalAlimentos}
+            >
+              <Text style={{ color: theme.colors.text, textAlign: "center" }}>
+                📥 Agregar alimento
+              </Text>
+            </TouchableOpacity>
+
+            <TextInput
+              style={[
+                styles.input,
+                { marginBottom: 20, color: theme.colors.text },
+              ]}
               onChangeText={(prevVal) => setComida(prevVal)}
               value={comida}
               placeholder="🥗 Comida..."
@@ -499,7 +548,10 @@ export default function RegistrosScreen({ route }) {
             />
 
             <TextInput
-              style={[styles.input, { marginBottom: 20 }]}
+              style={[
+                styles.input,
+                { marginBottom: 20, color: theme.colors.text },
+              ]}
               onChangeText={(prevVal) => setCalorias(prevVal)}
               value={calorias.toString()}
               placeholder="🔥 Calorías..."
@@ -543,6 +595,34 @@ export default function RegistrosScreen({ route }) {
           />
         </View>
         {/*<Button title="Cancelar" onPress={() => setModalVisible(false)} />*/}
+      </ModalSlideBottom>
+
+      {/* Modal añadir alimentos */}
+      <ModalSlideBottom
+        modalVisible={modalVisibleAlimentos}
+        title={"Selecciona tu alimento"}
+        onClose={() => {
+          setModalVisibleAlimentos(false), setModalVisibleRegistro(true);
+        }}
+      >
+        <FlatList
+          data={products}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={[
+                styles.registroItem,
+                { backgroundColor: item.antojo ? "#fec8c8" : "#c8defe" },
+              ]}
+              onPress={() => {
+                importarAlimento(item);
+              }}
+            >
+              <Text>{item.comida}</Text>
+              <Text>{item.calorias}</Text>
+            </TouchableOpacity>
+          )}
+        />
       </ModalSlideBottom>
     </View>
   );

@@ -14,8 +14,8 @@ export const darkTheme = {
   dark: true,
   colors: {
     ...DefaultTheme.colors,
-    background: "#222",
+    background: "rgb( 34, 34, 34)",
     text: "#FFFFFF",
-    card: "#000"
+    card: "#000",
   },
 };
