@@ -2,107 +2,105 @@
 
 ![Logo Antogeitor](./assets/repo-logo.png)
 
+¡Bienvenido a **Antogeitor**! Una aplicación diseñada para ayudarte a llevar un registro diario de tus comidas, calorías y esos antojos irresistibles. Ideal para mantenerte al tanto de tus hábitos alimenticios y organizar tu día a día de manera simple y eficiente. 🌟
+
+---
+
 ## Tabla de Contenidos
 - [🍌 Antogeitor - *Registro de Comida y Antojos*](#-antogeitor---registro-de-comida-y-antojos)
   - [Tabla de Contenidos](#tabla-de-contenidos)
+    - [🌟 Características](#-características)
     - [📱 Screenshots](#-screenshots)
     - [📥 Descargar App](#-descargar-app)
-    - [💬 App en React Native](#-app-en-react-native)
-    - [🤖 Tecnologías utilizadas](#-tecnologías-utilizadas)
     - [🚀 Cómo empezar](#-cómo-empezar)
-  - [📚 Guía para Clonar y Ejecutar el Proyecto](#-guía-para-clonar-y-ejecutar-el-proyecto)
-    - [Requisitos previos](#requisitos-previos)
-    - [Clonar el Repositorio](#clonar-el-repositorio)
-    - [Instalación de Dependencias](#instalación-de-dependencias)
-    - [Ejecución del Proyecto](#ejecución-del-proyecto)
-    - [Contribuciones y sugerencias](#contribuciones-y-sugerencias)
+      - [Requisitos previos](#requisitos-previos)
+      - [Clonar el Repositorio](#clonar-el-repositorio)
+      - [Instalación de Dependencias](#instalación-de-dependencias)
+      - [Ejecución del Proyecto](#ejecución-del-proyecto)
+    - [💡 Contribuciones y sugerencias](#-contribuciones-y-sugerencias)
+
 ---
+
+### 🌟 Características
+
+- 🌞 **Temas claro y oscuro:** Elige cómo prefieres interactuar con la app según tu gusto o entorno.
+- 🍴 **Gestión de alimentos personalizados:** Crea alimentos y añádelos a tus registros diarios.
+- 🔢 **Cálculo de calorías diarias:** Realiza un seguimiento del consumo diario de calorías para mantener un estilo de vida balanceado.
+- 🤤 **Antojos organizados:** Continúa registrando y monitoreando tus antojos fácilmente, como en la versión anterior.
+- ✨ **Interfaz mejorada:** Una experiencia de usuario más pulida, intuitiva y agradable.
+
+---
+
 ### 📱 Screenshots
-[👉 Ver capturas de pantalla de la app aquí](./SCREENSHOTS.md)
+
+[👉 Ver capturas de pantalla aquí](./SCREENSHOTS.md)
+
+---
 
 ### 📥 Descargar App
-Puedes descargar la última versión de la app aquí:
-[Descargar la versión v1.0.0](https://github.com/ErikWebDeveloper/Antogeitor/releases/tag/v1.0.0)
 
-### 💬 App en React Native
+Descarga la última versión de **Antogeitor** directamente desde los lanzamientos del repositorio:  
+[Descargar la versión más reciente](https://github.com/ErikWebDeveloper/Antogeitor/releases)
 
-Esta es una aplicación desarrollada en React Native que permite a los usuarios registrar y hacer un seguimiento de sus comidas diarias y antojos. Ideal para quienes buscan monitorear sus hábitos alimenticios o simplemente quieren tener un registro organizado de lo que consumen cada día.
-Funcionalidades principales
-
-- **Registro diario de comidas:** Añade y categoriza tus comidas a lo largo del día.
-- **Seguimiento de antojos:** Registra esos momentos de tentación para comprender mejor tus hábitos.
-- **Interfaz intuitiva:** Una experiencia de usuario sencilla y agradable para facilitar el seguimiento diario.
-- **Navegación fluida:** Utilizando @react-navigation/native y @react-navigation/stack para un manejo de pantallas sin complicaciones.
-- **Sincronización y almacenamiento:** Los datos se guardan de manera local usando @react-native-async-storage/async-storage para garantizar que tu información esté siempre disponible.
-
-### 🤖 Tecnologías utilizadas
-
-- **React Native:** Para construir la interfaz nativa multiplataforma.
-- **Expo:** Para facilitar el desarrollo y la construcción de la app.
-- **react-native-calendars:** Para gestionar los registros de días y fechas de manera organizada.
-- **@react-native-community/datetimepicker y @react-native-picker/picker:** Para seleccionar fechas y opciones de manera eficiente.
-- **react-native-gesture-handler y react-native-safe-area-context:** Para una navegación y experiencia de usuario óptimas.
+---
 
 ### 🚀 Cómo empezar
 
-- Clona este repositorio.
-- Instala las dependencias necesarias ejecutando npm install o yarn install.
-- Usa Expo para iniciar la app con expo start.
+#### Requisitos previos
 
-## 📚 Guía para Clonar y Ejecutar el Proyecto
-
-Sigue estos pasos para obtener una copia local del proyecto y ejecutarla en tu entorno de desarrollo.
-
-### Requisitos previos
-
-- Tener **Node.js** y **npm** instalados.
-- Tener **Expo CLI** instalada globalmente. Puedes instalarla ejecutando:
+1. Tener **Node.js** instalado.
+2. Instalar la **CLI de Expo** globalmente:
 
 ```bash
 npm install -g expo-cli
 ```
 
-### Clonar el Repositorio
+#### Clonar el Repositorio
 
-1. Abre tu terminal o línea de comandos.
-
-2. Clona este repositorio ejecutando:
+1. Clona este repositorio ejecutando:
 
 ```bash
 git clone https://github.com/ErikWebDeveloper/Antogeitor.git
 ```
 
-3. Navega al directorio del proyecto:
+2. Navega al directorio del proyecto:
 
 ```bash
 cd Antogeitor
 ```
 
-### Instalación de Dependencias
+#### Instalación de Dependencias
 
-1. Instala las dependencias necesarias ejecutando:
+Instala las dependencias necesarias ejecutando:
 
 ```bash
 npm install
 ```
-o si prefieres usar Yarn:
+o si usas Yarn:
 
 ```bash
 yarn install
 ```
 
-### Ejecución del Proyecto
+#### Ejecución del Proyecto
 
-1. Inicia la aplicación en modo de desarrollo con Expo:
+1. Inicia el proyecto en modo desarrollo con Expo:
 
 ```bash
 expo start
 ```
-2. Se abrirá el navegador con la interfaz de Expo Developer Tools. Desde allí, puedes:
 
-- Escanear el código QR con la app de Expo Go en tu dispositivo móvil.
-- Ejecutar la aplicación en un emulador de Android o un simulador de iOS.
+2. Abre la interfaz de Expo Developer Tools en tu navegador. Desde ahí, puedes:
+   - Escanear el código QR con la app Expo Go en tu dispositivo móvil.
+   - Ejecutar la app en un emulador de Android o simulador de iOS.
 
+---
 
-### Contribuciones y sugerencias
-[👉 Lee las normas de contribución aquí](./CONTRIBUTING.md)
+### 💡 Contribuciones y sugerencias
+
+¡Tus ideas son importantes para nosotros! Si tienes sugerencias, mejoras o deseas contribuir, revisa nuestra guía:  
+[👉 Normas de contribución](./CONTRIBUTING.md)  
+
+---
+
+Espero que este README sea justo lo que necesitas. Si quieres añadir algo más, ¡avísame! 😊
