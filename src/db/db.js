@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS productos (
 `);
 
   //await clearAllTables(db);
-  await getAllData(db);
+  //await getAllData(db);
   
   /*await db.execAsync(`
 INSERT INTO productos (comida, calorias) VALUES
@@ -79,9 +79,9 @@ VALUES (2, "19:00", "Cena", 45, 4, "Sopa de verduras", 0, 180);
 
 export async function getData(db) {
   const allRows = await db.getAllAsync("SELECT * FROM test");
-  for (const row of allRows) {
+  /*for (const row of allRows) {
     console.log(row.id, row.value, row.intValue);
-  }
+  }*/
 }
 
 async function createData(db) {

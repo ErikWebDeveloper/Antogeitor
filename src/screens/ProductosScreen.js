@@ -35,7 +35,6 @@ export default function ProductosScreen() {
   const getProducts = async () => {
     let products = await get(db);
     setProducts(products);
-    console.log(products);
   };
 
   // Guardar producto

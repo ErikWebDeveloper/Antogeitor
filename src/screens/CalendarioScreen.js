@@ -21,10 +21,10 @@ export default function CalendarioScreen({ navigation }) {
       const keys = await AsyncStorage.getAllKeys(); // Obtener todas las claves
       const items = await AsyncStorage.multiGet(keys); // Obtener los valores de esas claves
 
-      console.log("AsyncStorage completo:");
+      /*console.log("AsyncStorage completo:");
       items.forEach(([key, value]) => {
         console.log(`${key}: ${value}`);
-      });
+      });*/
     } catch (error) {
       console.error("Error al acceder a AsyncStorage:", error);
     }

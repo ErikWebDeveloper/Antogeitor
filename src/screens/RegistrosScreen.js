@@ -84,7 +84,6 @@ export default function RegistrosScreen({ route }) {
   const getProducts = async () => {
     let products = await getProductos(db);
     setProducts(products);
-    console.log(products);
   };
 
   // Cargar productos al iniciar

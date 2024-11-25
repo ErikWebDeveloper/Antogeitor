@@ -48,7 +48,6 @@ const MainApp = ({ theme }) => {
   useEffect(() => {
     const initDatabase = async () => {
       await initDB(db);
-      console.log("[OK] Init DataBase")
     };
     initDatabase();
   }, []);

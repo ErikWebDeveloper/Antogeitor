@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { getAll as getFechas, insert as insertFecha } from "./fechasModel";
 
 export async function getAllByFecha(db, fecha) {
@@ -61,7 +62,7 @@ ORDER BY
 export async function insert(db, date, values) {
   let result = await insertFecha(db, date);
 
-  if (!result.id) return console.log("Error al obtener fecha id");
+  if (!result.id) return Alert.alert("Error", "Error al obtener fecha seleccionada.");
 
   let fechaId = result.id;
 

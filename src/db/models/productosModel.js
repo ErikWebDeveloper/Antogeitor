@@ -1,8 +1,8 @@
 export async function get(db) {
   const allRows = await db.getAllAsync("SELECT * FROM productos");
-  for (const row of allRows) {
+  /*for (const row of allRows) {
     console.log(row.id, row.comida, row.calorias);
-  }
+  }*/
   return allRows;
 }
 
@@ -43,7 +43,7 @@ export async function insert(db, value = { comida: null, calorias: null }) {
       $comida: value.comida,
       $calorias: value.calorias,
     });
-    console.log("[OK] Insert", result.lastInsertRowId, result.changes);
+    //console.log("[OK] Insert", result.lastInsertRowId, result.changes);
 
     return {
       success: true,
@@ -75,7 +75,7 @@ export async function updateById(
       $comida: value.comida,
       $calorias: value.calorias,
     });
-    console.log("[OK] Update", result.changes);
+    //console.log("[OK] Update", result.changes);
 
     return {
       success: true,

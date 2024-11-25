@@ -4,9 +4,7 @@ import { useTheme } from "../contexts/ThemeContext";
 export function ModalSlideBottom({
   children,
   title = "",
-  onClose = () => {
-    console.log("On close function()");
-  },
+  onClose = () => {},
   modalVisible = false,
 }) {
   const { theme } = useTheme();
