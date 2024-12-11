@@ -100,7 +100,3 @@ expo start
 
 ¡Tus ideas son importantes para nosotros! Si tienes sugerencias, mejoras o deseas contribuir, revisa nuestra guía:  
 [👉 Normas de contribución](./CONTRIBUTING.md)  
-
----
-
-Espero que este README sea justo lo que necesitas. Si quieres añadir algo más, ¡avísame! 😊
